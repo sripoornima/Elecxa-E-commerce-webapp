@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ELECXA - Final Checkout</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/checkout.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header Section -->
+    <header class="header">
+        <div class="overlap-group">
+            <a th:href="@{/}"><img class="head-logo" src="../img/Headers/Your_paragraph_text_1-removebg-preview.png" alt="ELECXA" /></a>
+            
+            <div class="header-center">
+                <div class="div">
+                    <div class="menu">
+                        <i class="fas fa-bars"></i>
+                    </div>
+                    <div class="text-wrapper-2">Menu</div>
+                </div>
+                <div class="overlap">
+                    <div class="search-normal">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <div class="text-wrapper">Search by Categories, Products</div>
+                </div>
+            </div>
+
+            <div class="header-right">
+                <div class="icon-user">
+                    <a id="profileLink">
+                        <i class="fas fa-user-circle"></i>
+                        <span>Account</span>
+                    </a>
+                </div>
+                <div class="icon-cart-alt">
+                    <a id="cartLink">
+                        <i class="fas fa-shopping-basket"></i>
+                        <span>Cart</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Checkout Content -->
+    <div class="checkout-container">
+        <!-- Checkout Progress -->
+        <div class="checkout-progress">
+            <div class="progress-bar" style="width: 33%"></div>
+            <div class="progress-step completed">
+                <span class="progress-step-text">Your Details</span>
+            </div>
+            <div class="progress-step active">
+                <span class="progress-step-text">Final Checkout</span>
+            </div>
+            <div class="progress-step">
+                <span class="progress-step-text">Payment</span>
+            </div>
+        </div>
+
+        <!-- Checkout Form -->
+        <form id="checkout-form" th:action="@{/checkout/review}" method="post">
+            <!-- Checkout Content -->
+            <div class="checkout-content">
+                <!-- Details Panel -->
+                <div class="details-panel">
+                    <!-- Review Details -->
+                    <div class="form-section">
+                        <h3 class="panel-title">Review Your Details</h3>
+                        
+                        <div class="review-section">
+                            <h4 class="review-subtitle">Personal Information</h4>
+                            <div class="review-item">
+                                <span class="review-label">Full Name:</span>
+                                <span class="review-value" id="review-fullname" th:text="${checkout.fullName}">John Doe</span>
+                            </div>
+                            <div class="review-item">
+                                <span class="review-label">Email:</span>
+                                <span class="review-value" id="review-email" th:text="${checkout.email}">john.doe@example.com</span>
+                            </div>
+                            <div class="review-item">
+                                <span class="review-label">Phone:</span>
+                                <span class="review-value" id="review-phone" th:text="${checkout.phone}">+91 9876543210</span>
+                            </div>
+                        </div>
+                        
+                        <div class="review-section">
+                            <h4 class="review-subtitle">Shipping Address</h4>
+                            <div class="review-item">
+                                <span class="review-label">Address:</span>
+                                <span class="review-value" id="review-address" th:text="${checkout.address}">123 Main Street</span>
+                            </div>
+                            <div class="review-item" th:if="${checkout.apartment}">
+                                <span class="review-label">Apartment:</span>
+                                <span class="review-value" id="review-apt" th:text="${checkout.apartment}">Apt 4B</span>
+                            </div>
+                            <div class="review-item">
+                                <span class="review-label">City:</span>
+                                <span class="review-value" id="review-city" th:text="${checkout.city}">Mumbai</span>
+                            </div>
+                            <div class="review-item">
+                                <span class="review-label">State:</span>
+                                <span class="review-value" id="review-state" th:text="${checkout.state}">Maharashtra</span>
+                            </div>
+                            <div class="review-item">
+                                <span class="review-label">Pincode:</span>
+                                <span class="review-value" id="review-pincode" th:text="${checkout.pincode}">400001</span>
+                            </div>
+                        </div>
+                        <div class="edit-button">
+                            <a th:href="@{/checkout/details}" href="checkout.html" class="edit-link">Edit Details</a>
+                        </div>
+                    </div>
+                    
+                    <!-- Delivery Options -->
+                    <div class="form-section">
+                        <h3 class="panel-title">Delivery Options</h3>
+                        
+                        <div class="delivery-options">
+                            <div class="delivery-option" th:each="option : ${deliveryOptions}">
+                                <input type="radio" th:id="${option.code}" name="deliveryOption" th:value="${option.code}" 
+                                       th:checked="${checkout.deliveryOption == option.code}">
+                                <label th:for="${option.code}">
+                                    <div class="option-details">
+                                        <span class="option-title" th:text="${option.name}">Standard Delivery</span>
+                                        <span class="option-description" th:text="${option.description}">3-5 Business Days</span>
+                                    </div>
+                                    <span class="option-price" th:text="${option.price > 0 ? '₹' + #numbers.formatDecimal(option.price, 0, 'COMMA', 0, 'POINT') : 'Free'}">Free</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Summary Panel -->
+                <div class="summary-panel">
+                    <div class="product-summary" th:each="item : ${cart.items}">
+                        <img th:src="${item.imageUrl}" src="../img/Mobile Phones/image 19.jpg" 
+                             th:alt="${item.name}" alt="Samsung Galaxy S24 Ultra" class="product-image">
+                        <h3 class="product-title" th:text="${item.name}">SAMSUNG Galaxy S24 Ultra 5G (12GB RAM, 256GB, Titanium Gray)</h3>
+                        <div class="product-price">
+                            ₹<span th:text="${#numbers.formatDecimal(item.price, 0, 'COMMA', 0, 'POINT')}">1,10,999</span>
+                            <span class="original-price" th:if="${item.originalPrice > 0}">₹<span th:text="${#numbers.formatDecimal(item.originalPrice, 0, 'COMMA', 0, 'POINT')}">1,25,999</span></span>
+                        </div>
+                        <p class="item-quantity" th:if="${item.quantity > 1}" th:text="${'Quantity: ' + item.quantity}">Quantity: 1</p>
+                        <p class="price-note">(Inclusive of all Taxes)</p>
+                    </div>
+                    
+                    <div class="order-summary">
+                        <h3 class="panel-title">Order Summary</h3>
+                        
+                        <div class="summary-item">
+                            <span class="summary-label">Subtotal</span>
+                            <span class="summary-value">₹<span th:text="${#numbers.formatDecimal(cart.subtotal, 0, 'COMMA', 0, 'POINT')}">1,10,999</span></span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">Shipping</span>
+                            <span class="summary-value" id="shipping-cost" th:text="${cart.shippingCost > 0 ? '₹' + #numbers.formatDecimal(cart.shippingCost, 0, 'COMMA', 0, 'POINT') : 'Free'}">Free</span>
+                        </div>
+                        <div class="summary-item" th:if="${cart.discount > 0}">
+                            <span class="summary-label">Discount</span>
+                            <span class="summary-value">-₹<span th:text="${#numbers.formatDecimal(cart.discount, 0, 'COMMA', 0, 'POINT')}">0</span></span>
+                        </div>
+                        <div class="summary-item" th:if="${cart.tax > 0}">
+                            <span class="summary-label">Tax</span>
+                            <span class="summary-value">₹<span th:text="${#numbers.formatDecimal(cart.tax, 0, 'COMMA', 0, 'POINT')}">0</span></span>
+                        </div>
+                        <div class="summary-item total">
+                            <span class="summary-label">Total</span>
+                            <span class="summary-value" id="total-cost">₹<span th:text="${#numbers.formatDecimal(cart.total, 0, 'COMMA', 0, 'POINT')}">1,10,999</span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Action Buttons -->
+            <div class="button-container">
+                <a th:href="@{/checkout/details}" href="checkout.html" class="back-button">Back to Details</a>
+                <button type="submit" class="proceed-button">Proceed to Payment</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-columns">
+                <div class="footer-column">
+                    <h3>Shop</h3>
+                    <ul>
+                        <li><a href="products-page.html">Products</a></li>
+                        <li><a href="#">Shipping and Returns</a></li>
+                        <li><a href="order-confirmation.html">Track My Order</a></li>
+                        <li><a href="profile-new.html">My Account</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>About</h3>
+                    <ul>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Cookie Policy</a></li>
+                        <li><a href="#">Terms & Conditions</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Do You Need Help?</h3>
+                    <ul>
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">FAQs</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="payment-methods">
+                <h3>Payments Accepted</h3>
+                <div class="payment-icons">
+                    <img src="../img/Footers/image 1.jpg" alt="Visa">
+                    <img src="../img/Footers/image 2.jpg" alt="Mastercard">
+                    <img src="../img/Footers/image 4.jpg" alt="PayPal">
+                    <img src="../img/Footers/image 5.jpg" alt="American Express">
+                    <img src="../img/Footers/image 6.jpg" alt="Apple Pay">
+                    <img src="../img/Footers/image 7.jpg" alt="Google Pay">
+                </div>
+            </div>
+            
+            <div class="footer-divider"></div>
+            
+            <div class="footer-bottom">
+                <div class="footer-logo">
+                    <img src="../img/Headers/Your_paragraph_text_1-removebg-preview.png" alt="ELECXA">
+                </div>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-divider"></div>
+            
+            <div class="copyright">
+                <p>Elecxa © 2025 All Rights Reserved</p>
+            </div>
+        </div>
+    </footer>
+     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            
+            const userId = sessionStorage.getItem('userId');
+                if (userId) {
+                    document.getElementById("profileLink").href = "/profile?id=" + userId;
+                    document.getElementById("cartLink").href = "/cart?id=" + userId;
+
+                }                
+            
+        });
+    </script>
+    <script src="../js/script.js"></script>
+</body>
+</html> 

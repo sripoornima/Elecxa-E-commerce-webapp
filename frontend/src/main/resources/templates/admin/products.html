@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{admin/layout :: layout(~{::title}, ~{::section})}">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Products - Admin Panel</title>
+<!-- Bootstrap CSS -->
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
+	rel="stylesheet">
+
+<!-- Font Awesome Icons -->
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
+
+<!-- Custom CSS -->
+<link rel="stylesheet" th:href="@{/css/style.css}">
+
+<!-- Dark mode CSS (conditionally loaded) -->
+<link rel="stylesheet" th:href="@{/css/dark-mode.css}"
+	th:if="${session.darkMode}">
+</head>
+<body>
+	<section id="productContainer">
+		<!-- Page Title -->
+		<div class="d-sm-flex align-items-center justify-content-between mb-4">
+			<h1 class="h3 mb-0 text-gray-800">Products</h1>
+			<button
+				class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"
+				data-bs-toggle="modal" data-bs-target="#addProductModal">
+				<i class="fas fa-plus fa-sm text-white-50"></i> Add New Product
+			</button>
+		</div>
+
+		<!-- Filters and Search -->
+		<div class="card shadow mb-4">
+			<div class="card-header py-3">
+				<h6 class="m-0 font-weight-bold text-primary">Filter Products</h6>
+			</div>
+			<div class="card-body">
+				<div class="row align-items-center">
+					<div class="col-md-3 mb-3 mb-md-0">
+						<label for="categoryFilter" class="form-label">Category</label> <select
+							class="form-select" id="categoryFilter">
+							<option value="">All Categories</option>
+							<option th:each="category : ${categories}"
+								th:value="${category.name}" th:text="${category.name}"
+								th:selected="${category == categories}">>Electronics</option>
+						</select>
+					</div>
+					<div class="col-md-3 mb-3 mb-md-0">
+						<label for="subcategoryFilter" class="form-label">Sub
+							Category</label> <select class="form-select" id="subcategoryFilter">
+							<option value="">All SubCategories</option>
+							<option th:each="subcategory : ${subcategories}"
+								th:value="${subcategory.name}" th:text="${subcategory.name}">Electronics</option>
+						</select>
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+		<!-- Products Grid -->
+		<div class="row">
+			<div class="col-lg-3 col-md-4 col-sm-6 mb-4"
+				th:each="product : ${products}">
+				<div class="card shadow h-100 hover-card">
+					<div class="position-relative">
+						<img class="card-img-top" th:src="${product.imageUrl}"
+							alt="Product Image" style="height: 180px; object-fit: cover;">
+						<span class="badge position-absolute top-0 end-0 m-2"
+							th:classappend="${product.stockQuantity>0 ? 'bg-success' : 'bg-danger'}"
+							th:text="${product.stockQuantity>0 ? 'In Stock' : 'Out of Stock'}">In
+							Stock</span>
+					</div>
+					<div class="card-body d-flex flex-column">
+						<h5 class="card-title" th:text="${product.name}">Product Name</h5>
+						<p class="card-text text-truncate-2 mb-2"
+							th:text="${product.description}">Product description goes
+							here.</p>
+						<div
+							class="d-flex justify-content-between align-items-center mb-2">
+							<span class="font-weight-bold"
+								th:text="${#numbers.formatCurrency(product.price)}">$799.99</span>
+							<span class="badge bg-info"
+								th:text="${product.subcategory.category.name}">Electronics</span>
+						</div>
+						<div class="mt-auto">
+							<div class="d-flex justify-content-between">
+								<span class="text-muted small">Stock: <span
+									th:text="${product.stockQuantity}">45</span></span>
+								<div>
+									<a th:href="@{/product/delete/{id}(id=${product.productId})}"
+										class="btn btn-sm btn-outline-danger"> <i
+										class="fas fa-trash"></i>
+									</a> <a class="btn btn-sm btn-outline-secondary"
+										data-bs-toggle="modal" data-bs-target="#editProductModal"
+										th:onclick="'fillProductDetails(' + ${product.productId}+ ')'"> <i class="fas fa-edit"></i>
+									</a>
+
+
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+		<div class="modal fade" id="addProductModal" tabindex="-1"
+			aria-labelledby="addProductModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="addProductModalLabel">Add New
+							Product</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal"
+							aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+
+						<form th:action="@{/product/add}" method="post"
+							th:object="${newProduct}">
+							<div class="row mb-3">
+								<div class="col-md-6">
+									<label for="productName" class="form-label">Product
+										Name</label> <input type="text" class="form-control" id="productName"
+										th:field="*{name}" required>
+								</div>
+								<div class="col-md-6">
+									<label for="productPrice" class="form-label">Price</label>
+									<div class="input-group">
+										<span class="input-group-text">₹</span> <input type="number"
+											class="form-control" id="productPrice" th:field="*{price}"
+											step="0.01" min="0" required>
+									</div>
+								</div>
+							</div>
+							<div class="row mb-3">
+								<div class="col-md-6">
+
+									<label for="productCategory" class="form-label">Category</label>
+
+									<select class="form-select" id="productCategory"
+										th:field="*{category}">
+										<option value="">Choose One</option>
+										<option th:each="category : ${categories}"
+											th:value="${category.name}" th:text="${category.name}">>Electronics</option>
+									</select>
+
+								</div>
+								<div class="col-md-6">
+									<label for="productSubcategory" class="form-label">Subcategory</label>
+									<select class="form-select" id="productSubcategory"
+										th:field="*{subcategory}">
+										<option value="">Choose One</option>
+										<option th:each="subcategory : ${subcategories}"
+											th:value="${subcategory.name}" th:text="${subcategory.name}">Electronics</option>
+									</select>
+								</div>
+							</div>
+
+							<div class="row mb-3">
+								<div class="col-md-4">
+									<label for="productDiscount" class="form-label">Discount</label>
+									<input type="number" class="form-control" id="productDiscount"
+										th:field="*{discount}" min="0" max="100" required>
+								</div>
+								<div class="col-md-4">
+									<label for="productBrand" class="form-label">Brand</label> <input
+										type="text" class="form-control" id="productBrand"
+										th:field="*{brand}" required>
+								</div>
+
+								<div class="col-md-4">
+									<label for="productWarranty" class="form-label">Warranty</label>
+									<input type="text" class="form-control" id="productWarranty"
+										th:field="*{warranty}" required>
+								</div>
+							</div>
+
+							<div class="row mb-3">
+								<div class="col-md-6">
+									<label for="productStock" class="form-label">Stock
+										Quantity</label> <input type="number" class="form-control"
+										id="productStock" th:field="*{stockQuantity}" min="0" required>
+								</div>
+								<div class="col-md-6">
+									<label for="productImage" class="form-label">Image URL</label>
+									<input type="file" class="form-control" id="productImage"
+										th:field="*{imageUrl}" required>
+								</div>
+							</div>
+							<div class="mb-3">
+								<label for="productDescription" class="form-label">Description</label>
+								<textarea class="form-control" id="productDescription" rows="3"
+									th:field="*{description}" required></textarea>
+							</div>
+
+							<div class="row mb-3">
+								<div class="col-md-6">
+									<label for="productAttributeName" class="form-label">Product
+										Details Name</label> <input type="text" class="form-control"
+										id="productAttributeName" th:field="*{attributes}" required>
+								</div>
+								<div class="col-md-6">
+									<label for="productAttributeValue" class="form-label">Product
+										Details Value</label> <input type="text" class="form-control"
+										id="productAttributeValue" th:field="*{attributes}" required>
+								</div>
+							</div>
+
+							<div class="row mb-3">
+								<div class="col-md-6">
+									<label for="productAttributeName" class="form-label">Product
+										Details Name</label> <input type="text" class="form-control"
+										id="productAttributeName" th:field="*{attributes}" required>
+								</div>
+								<div class="col-md-6">
+									<label for="productAttributeValue" class="form-label">Product
+										Details Value</label> <input type="text" class="form-control"
+										id="productAttributeValue" th:field="*{attributes}" required>
+								</div>
+							</div>
+							<div class="row mb-3">
+								<div class="col-md-6">
+									<label for="productAttributeName" class="form-label">Product
+										Details Name</label> <input type="text" class="form-control"
+										id="productAttributeName" th:field="*{attributes}" required>
+								</div>
+								<div class="col-md-6">
+									<label for="productAttributeValue" class="form-label">Product
+										Details Value</label> <input type="text" class="form-control"
+										id="productAttributeValue" th:field="*{attributes}" required>
+								</div>
+							</div>
+							<div class="row mb-3">
+								<div class="col-md-6">
+									<label for="productAttributeName" class="form-label">Product
+										Details Name</label> <input type="text" class="form-control"
+										id="productAttributeName" th:field="*{attributes}" required>
+								</div>
+								<div class="col-md-6">
+									<label for="productAttributeValue" class="form-label">Product
+										Details Value</label> <input type="text" class="form-control"
+										id="productAttributeValue" th:field="*{attributes}" required>
+								</div>
+							</div>
+							<div class="row mb-3">
+								<div class="col-md-6">
+									<label for="productAttributeName" class="form-label">Product
+										Details Name</label> <input type="text" class="form-control"
+										id="productAttributeName" th:field="*{attributes}" required>
+								</div>
+								<div class="col-md-6">
+									<label for="productAttributeValue" class="form-label">Product
+										Details Value</label> <input type="text" class="form-control"
+										id="productAttributeValue" th:field="*{attributes}" required>
+								</div>
+							</div>
+							<div class="row mb-3">
+								<div class="col-md-6">
+									<label for="productAttributeName" class="form-label">Product
+										Details Name</label> <input type="text" class="form-control"
+										id="productAttributeName" th:field="*{attributes}" required>
+								</div>
+								<div class="col-md-6">
+									<label for="productAttributeValue" class="form-label">Product
+										Details Value</label> <input type="text" class="form-control"
+										id="productAttributeValue" th:field="*{attributes}" required>
+								</div>
+							</div>
+							<div class="row mb-3">
+								<div class="col-md-6">
+									<label for="productAttributeName" class="form-label">Product
+										Details Name</label> <input type="text" class="form-control"
+										id="productAttributeName" th:field="*{attributes}" required>
+								</div>
+								<div class="col-md-6">
+									<label for="productAttributeValue" class="form-label">Product
+										Details Value</label> <input type="text" class="form-control"
+										id="productAttributeValue" th:field="*{attributes}" required>
+								</div>
+							</div>
+							<div class="row mb-3">
+								<div class="col-md-6">
+									<label for="productAttributeName" class="form-label">Product
+										Details Name</label> <input type="text" class="form-control"
+										id="productAttributeName" th:field="*{attributes}" required>
+								</div>
+								<div class="col-md-6">
+									<label for="productAttributeValue" class="form-label">Product
+										Details Value</label> <input type="text" class="form-control"
+										id="productAttributeValue" th:field="*{attributes}" required>
+								</div>
+							</div>
+							<div class="text-end">
+								<button type="button" class="btn btn-secondary"
+									data-bs-dismiss="modal">Cancel</button>
+								<button type="submit" class="btn btn-primary">Add
+									Product</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+		<div class="modal fade" id="editProductModal" tabindex="-1"
+			aria-labelledby="editProductModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="editProductModalLabel">Update
+							Product</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal"
+							aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+
+
+						<form id="editProductForm" th:action="@{/product/edit/{id}}" method="post" th:object="${newProduct}">
+							<div class="row mb-3">
+								<div class="col-md-6">
+									<label for="editproductName" class="form-label">Product
+										Name</label> <input type="text" class="form-control" id="editproductName"
+										th:field="*{name}" required>
+								</div>
+								<div class="col-md-6">
+									<label for="editproductPrice" class="form-label">Price</label>
+									<div class="input-group">
+										<span class="input-group-text">₹</span> <input type="number"
+											class="form-control" id="editproductPrice" th:field="*{price}"
+											step="0.01" min="0" required>
+									</div>
+								</div>
+							</div>
+							<div class="row mb-3">
+								<div class="col-md-6">
+
+									<label for="editproductCategory" class="form-label">Category</label>
+
+									<select class="form-select" id="editproductCategory"
+										th:field="*{category}">
+										<option value="">Choose One</option>
+										<option th:each="category : ${categories}"
+											th:value="${category.name}" th:text="${category.name}">>Electronics</option>
+									</select>
+
+								</div>
+								<div class="col-md-6">
+									<label for="editproductSubcategory" class="form-label">Subcategory</label>
+									<select class="form-select" id="editproductSubcategory"
+										th:field="*{subcategory}">
+										<option value="">Choose One</option>
+										<option th:each="subcategory : ${subcategories}"
+											th:value="${subcategory.name}" th:text="${subcategory.name}">Electronics</option>
+									</select>
+								</div>
+							</div>
+
+							<div class="row mb-3">
+								<div class="col-md-4">
+									<label for="editproductDiscount" class="form-label">Discount</label>
+									<input type="number" class="form-control" id="editproductDiscount"
+										th:field="*{discount}" min="0" max="100" required>
+								</div>
+								<div class="col-md-4">
+									<label for="editproductBrand" class="form-label">Brand</label> <input
+										type="text" class="form-control" id="editproductBrand"
+										th:field="*{brand}" required>
+								</div>
+
+								<div class="col-md-4">
+									<label for="editproductWarranty" class="form-label">Warranty</label>
+									<input type="text" class="form-control" id="editproductWarranty"
+										th:field="*{warranty}" required>
+								</div>
+							</div>
+
+							<div class="row mb-3">
+								<div class="col-md-6">
+									<label for="editproductStock" class="form-label">Stock
+										Quantity</label> <input type="number" class="form-control"
+										id="editproductStock" th:field="*{stockQuantity}" min="0" required>
+								</div>
+								<div class="col-md-6">
+									<label for="editproductImage" class="form-label">Image URL</label>
+									<input type="file" class="form-control" id="editproductImage"
+										th:field="*{imageUrl}" >
+								</div>
+							</div>
+							<div class="mb-3">
+								<label for="editproductDescription" class="form-label">Description</label>
+								<textarea class="form-control" id="editproductDescription" rows="3"
+									th:field="*{description}" required></textarea>
+							</div>
+
+							<div class="row mb-3">
+								<div class="col-md-6">
+									<label for="editproductAttributeName0" class="form-label">Product
+										Details Name</label> <input type="text" class="form-control"
+										id="editproductAttributeName0" th:field="*{attributes}" >
+								</div>
+								<div class="col-md-6">
+									<label for="editproductAttributeValue0" class="form-label">Product
+										Details Value</label> <input type="text" class="form-control"
+										id="editproductAttributeValue0" th:field="*{attributes}" >
+								</div>
+							</div>
+
+							<div class="row mb-3">
+								<div class="col-md-6">
+									<label for="editproductAttributeName1" class="form-label">Product
+										Details Name</label> <input type="text" class="form-control"
+										id="editproductAttributeName1" th:field="*{attributes}" >
+								</div>
+								<div class="col-md-6">
+									<label for="editproductAttributeValue1" class="form-label">Product
+										Details Value</label> <input type="text" class="form-control"
+										id="editproductAttributeValue1" th:field="*{attributes}" >
+								</div>
+							</div>
+							<div class="row mb-3">
+								<div class="col-md-6">
+									<label for="editproductAttributeName2" class="form-label">Product
+										Details Name</label> <input type="text" class="form-control"
+										id="editproductAttributeName2" th:field="*{attributes}" >
+								</div>
+								<div class="col-md-6">
+									<label for="editproductAttributeValue2" class="form-label">Product
+										Details Value</label> <input type="text" class="form-control"
+										id="editproductAttributeValue2" th:field="*{attributes}" >
+								</div>
+							</div>
+							<div class="row mb-3">
+								<div class="col-md-6">
+									<label for="editproductAttributeName3" class="form-label">Product
+										Details Name</label> <input type="text" class="form-control"
+										id="editproductAttributeName3" th:field="*{attributes}" >
+								</div>
+								<div class="col-md-6">
+									<label for="editproductAttributeValue3" class="form-label">Product
+										Details Value</label> <input type="text" class="form-control"
+										id="editproductAttributeValue3" th:field="*{attributes}" >
+								</div>
+							</div>
+							<div class="row mb-3">
+								<div class="col-md-6">
+									<label for="editproductAttributeName4" class="form-label">Product
+										Details Name</label> <input type="text" class="form-control"
+										id="editproductAttributeName4" th:field="*{attributes}" >
+								</div>
+								<div class="col-md-6">
+									<label for="editproductAttributeValue4" class="form-label">Product
+										Details Value</label> <input type="text" class="form-control"
+										id="editproductAttributeValue4" th:field="*{attributes}" >
+								</div>
+							</div>
+							<div class="row mb-3">
+								<div class="col-md-6">
+									<label for="editproductAttributeName5" class="form-label">Product
+										Details Name</label> <input type="text" class="form-control"
+										id="editproductAttributeName5" th:field="*{attributes}" >
+								</div>
+								<div class="col-md-6">
+									<label for="editproductAttributeValue5" class="form-label">Product
+										Details Value</label> <input type="text" class="form-control"
+										id="editproductAttributeValue5" th:field="*{attributes}" >
+								</div>
+							</div>
+							<div class="row mb-3">
+								<div class="col-md-6">
+									<label for="editproductAttributeName6" class="form-label">Product
+										Details Name</label> <input type="text" class="form-control"
+										id="editproductAttributeName6" th:field="*{attributes}" >
+								</div>
+								<div class="col-md-6">
+									<label for="editproductAttributeValue6" class="form-label">Product
+										Details Value</label> <input type="text" class="form-control"
+										id="editproductAttributeValue6" th:field="*{attributes}" >
+								</div>
+							</div>
+							<div class="row mb-3">
+								<div class="col-md-6">
+									<label for="editproductAttributeName7" class="form-label">Product
+										Details Name</label> <input type="text" class="form-control"
+										id="editproductAttributeName7" th:field="*{attributes}" >
+								</div>
+								<div class="col-md-6">
+									<label for="editproductAttributeValue7" class="form-label">Product
+										Details Value</label> <input type="text" class="form-control"
+										id="editproductAttributeValue7" th:field="*{attributes}" >
+								</div>
+							</div>
+
+							<div class="text-end">
+								<button type="button" class="btn btn-secondary"
+									data-bs-dismiss="modal">Cancel</button>
+								<button type="submit" class="btn btn-primary">Update
+									Product</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+	</section>
+
+
+	<script>
+	
+	
+        
+    document.addEventListener("DOMContentLoaded", function () {
+        const categoryFilter = document.getElementById("categoryFilter");
+        if (categoryFilter) {
+            categoryFilter.addEventListener('change', function () {
+                console.log("Selected Category: " + this.value);
+                alert("Selected Category: " + this.value); // Add this for test
+            });
+        } else {
+            console.error("categoryFilter not found!");
+        }
+    });     
+        </script>
+</body>
+
+</html>

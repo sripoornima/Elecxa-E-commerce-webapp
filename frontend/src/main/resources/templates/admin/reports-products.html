@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(~{::title}, ~{::section})}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Performance - Admin Panel</title>
+</head>
+<body>
+    <section>
+        <!-- Page Title -->
+        <div class="d-sm-flex align-items-center justify-content-between mb-4">
+            <h1 class="h3 mb-0 text-gray-800">Product Performance</h1>
+            <div class="btn-group">
+                <button type="button" class="btn btn-sm btn-primary dropdown-toggle shadow-sm" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fas fa-download fa-sm text-white-50"></i> Export Report
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li><a class="dropdown-item" href="#">Export as PDF</a></li>
+                    <li><a class="dropdown-item" href="#">Export as Excel</a></li>
+                    <li><a class="dropdown-item" href="#">Export as CSV</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Product Performance Report -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Top Performing Products</h6>
+                <div class="dropdown no-arrow">
+                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
+                        <div class="dropdown-header">View Options:</div>
+                        <a class="dropdown-item" href="#">By Sales</a>
+                        <a class="dropdown-item" href="#">By Revenue</a>
+                        <a class="dropdown-item" href="#">By Growth</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#">Export Data</a>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="chart-container" style="position: relative; height:40vh;">
+                    <canvas id="productChart"></canvas>
+                </div>
+                <div class="mt-4">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Sales</th>
+                                    <th>Revenue</th>
+                                    <th>Growth</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="data, stat : ${productPerformanceData}" th:if="${stat.index > 0}">
+                                    <td th:text="${data[0]}">Product Name</td>
+                                    <td th:text="${data[1]}">Sales</td>
+                                    <td th:text="${#numbers.formatCurrency(data[2])}">Revenue</td>
+                                    <td>
+                                        <span th:with="growth=${data[3]}"
+                                              th:class="${growth >= 0 ? 'text-success' : 'text-danger'}"
+                                              th:text="${growth >= 0 ? '+' : ''} + ${#numbers.formatDecimal(growth, 1, 1)} + '%'">
+                                            +8.5%
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-success">Active</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Product Inventory Status -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Inventory Status</h6>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-4 mb-4">
+                        <div class="card bg-primary text-white shadow">
+                            <div class="card-body">
+                                <div class="text-xs font-weight-bold text-uppercase mb-1">In Stock Products</div>
+                                <div class="h5 mb-0 font-weight-bold">85</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 mb-4">
+                        <div class="card bg-warning text-white shadow">
+                            <div class="card-body">
+                                <div class="text-xs font-weight-bold text-uppercase mb-1">Low Stock Products</div>
+                                <div class="h5 mb-0 font-weight-bold">25</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 mb-4">
+                        <div class="card bg-danger text-white shadow">
+                            <div class="card-body">
+                                <div class="text-xs font-weight-bold text-uppercase mb-1">Out of Stock Products</div>
+                                <div class="h5 mb-0 font-weight-bold">10</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Page specific scripts -->
+    <th:block th:fragment="scripts">
+        <script th:inline="javascript">
+            document.addEventListener('DOMContentLoaded', function() {
+                // Get report data from Thymeleaf
+                const productData = /*[[${productPerformanceData}]]*/ [];
+                
+                // Initialize chart
+                initializeProductChart(productData);
+            });
+            
+            function initializeProductChart(data) {
+                if (!data || data.length <= 1) return;
+                
+                const ctx = document.getElementById('productChart').getContext('2d');
+                
+                // Extract labels and data
+                const labels = [];
+                const salesData = [];
+                const growthData = [];
+                
+                // Skip header row
+                for (let i = 1; i < data.length && i <= 8; i++) {
+                    labels.push(data[i][0]);
+                    salesData.push(data[i][1]);
+                    growthData.push(data[i][3]);
+                }
+                
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [
+                            {
+                                label: 'Sales',
+                                data: salesData,
+                                backgroundColor: 'rgba(78, 115, 223, 0.7)',
+                                borderColor: 'rgba(78, 115, 223, 1)',
+                                borderWidth: 1,
+                                order: 1
+                            },
+                            {
+                                label: 'Growth %',
+                                data: growthData,
+                                type: 'line',
+                                fill: false,
+                                borderColor: 'rgba(28, 200, 138, 1)',
+                                tension: 0.1,
+                                yAxisID: 'y1',
+                                order: 0
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Sales'
+                                }
+                            },
+                            y1: {
+                                beginAtZero: false,
+                                position: 'right',
+                                title: {
+                                    display: true,
+                                    text: 'Growth %'
+                                },
+                                grid: {
+                                    drawOnChartArea: false
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                            },
+                            tooltip: {
+                                mode: 'index',
+                                intersect: false
+                            }
+                        }
+                    }
+                });
+            }
+        </script>
+    </th:block>
+</body>
+</html>

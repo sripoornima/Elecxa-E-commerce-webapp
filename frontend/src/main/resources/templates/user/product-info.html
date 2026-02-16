@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title th:text="${product.name} + ' - ELECXA'">ELECXA - Product
+	Info</title>
+<link rel="stylesheet" href="../css/styles.css">
+<link rel="stylesheet" href="../css/product-info.css">
+    <link rel="stylesheet" href="../css/search.css">
+
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link
+	href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600&display=swap"
+	rel="stylesheet">
+</head>
+
+<body>
+	<!-- Header Section -->
+	<header class="header">
+        <div class="overlap-group">
+            <a th:href="@{/}"><img class="head-logo" src="../img/Headers/Your_paragraph_text_1-removebg-preview.png" alt="ELECXA" /></a>
+            
+            <div class="header-center">
+                <div class="search-container">
+                    <form class="search-form">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" class="search-bar" placeholder="Search by Categories, Products">
+                        <i class="fas fa-times search-clear"></i>
+                    </form>
+                    
+                    <!-- Search Dropdown -->
+                    <div class="search-dropdown">
+                        <div class="search-dropdown-header">
+                            <h3>What are you looking for?</h3>
+                            <span class="search-dropdown-close"><i class="fas fa-times"></i></span>
+                        </div>
+                        
+                        <!-- Categories Section -->
+                        <div class="search-section">
+                            <h4 class="search-section-title">Popular Categories</h4>
+                            <div class="search-categories">
+                                <div class="search-category">Mobile</div>
+                                <div class="search-category">Laptop</div>
+                                <div class="search-category">Television</div>
+                                <div class="search-category">Accessories</div>
+                                <div class="search-category">Wearables</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Recent Searches Section -->
+                        <div class="search-section">
+                            <h4 class="search-section-title">Recent Searches</h4>
+                            <ul class="search-suggestions-list recent-searches-list">
+                                <li class="search-suggestion-item">
+                                    <div class="search-suggestion-icon">
+                                        <i class="fas fa-history"></i>
+                                    </div>
+                                    <div class="search-suggestion-text">samsung galaxy</div>
+                                </li>
+                                <li class="search-suggestion-item">
+                                    <div class="search-suggestion-icon">
+                                        <i class="fas fa-history"></i>
+                                    </div>
+                                    <div class="search-suggestion-text">wireless headphones</div>
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <!-- Popular Products Section -->
+                        <div class="search-section">
+                            <h4 class="search-section-title">Popular Products</h4>
+                            <div class="search-popular-products">
+                                <!-- Will be populated via JavaScript -->
+                            </div>
+                        </div>
+                        
+                        <!-- Search Results Container -->
+                        <div class="search-results-container">
+                            <!-- Will be filled with search results -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="header-right">
+                <div class="icon-user">
+                    <a id="profileLink">
+                        <i class="fas fa-user-circle"></i>
+                        <span>Account</span>
+                    </a>
+                </div>
+                <div class="icon-cart-alt">
+                    <a id="cartLink">
+                        <i class="fas fa-shopping-basket"></i>
+                        <span>Cart</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+
+	<!-- Product Info Content -->
+	<div class="product-info-container">
+		<!-- Breadcrumb Navigation -->
+		<div class="breadcrumb">
+			<a th:href="@{/}">Home</a> 
+			 <a th:href="@{/products(category=${categoryname} , id=${categoryId})}"
+				th:text="${categoryname}">Mobile Phones</a> 
+			 <span
+				th:text="${product.name}">Samsung Galaxy S24 Ultra</span>
+		</div>
+
+		<div class="product-content">
+			<!-- Product Image Section -->
+			<div class="product-image-container">
+				<div class="main-image-wrapper">
+					<img th:src="@{${product.imageUrl}}" th:alt="${product.name}"
+						class="main-product-image">
+					<div class="zoom-lens"></div>
+					<button class="wishlist-btn">
+						<i class="far fa-heart"></i>
+					</button>
+				</div>
+
+
+
+				<!-- <div class="product-thumbnails">
+                    <button class="thumb-nav prev"><i class="fas fa-chevron-left"></i></button>
+                    <div class="thumbnail-images">
+                        <img th:each="image, status : ${product.images}" 
+                             th:src="@{${image.url}}" 
+                             th:alt="${product.name + ' - ' + image.description}"
+                             th:class="${status.index == 0 ? 'active' : ''}">
+                    </div>
+                    <button class="thumb-nav next"><i class="fas fa-chevron-right"></i></button>
+                </div> -->
+
+				<!-- Action Buttons moved here -->
+				<div class="action-buttons">
+					<a
+						th:href="@{/cart/addtocart/{productId}(productId=${product.productId})}"
+						class="add-to-cart"> <i class="fas fa-bolt"></i> Add to Cart
+					</a> <a th:onclick="'initiatePayment(' + ${finalPrice} + ',' + ${product.productId} + ')'"
+						class="buy-now" > <i class="fas fa-bolt"></i> Buy Now
+					</a>
+				</div>
+				<div class="product-share">
+					<span>Share:</span> <a href="#" class="share-icon"><i
+						class="fab fa-facebook-f"></i></a> <a href="#" class="share-icon"><i
+						class="fab fa-twitter"></i></a> <a href="#" class="share-icon"><i
+						class="fab fa-pinterest"></i></a> <a href="#" class="share-icon"><i
+						class="fas fa-link"></i></a>
+				</div>
+
+			</div>
+			<!-- Product Details Section -->
+			<div class="product-details">
+				<div class="product-badge-container">
+					<span class="badge in-stock" th:if="${product.stockQuantity > 0}"><i
+						class="fas fa-check-circle"></i> In Stock</span> <span
+						class="badge out-of-stock" th:unless="${product.stockQuantity}"><i
+						class="fas fa-times-circle"></i> Out of Stock</span> <span
+						class="badge best-seller" th:if="${product.rating > 4.5}">Best
+						Seller</span>
+				</div>
+
+				<h1 class="product-title" th:text="${product.name}">SAMSUNG
+					Galaxy S24 Ultra 5G (12GB RAM, 256GB, Titanium Gray)</h1>
+
+				<div class="product-rating">
+					<div class="stars">
+						<i th:each="star : ${#numbers.sequence(1, 5)}"
+							th:class="${star <= product.rating ? 'fas fa-star' : 'far fa-star'}"></i>
+						<span th:text="${product.rating}">5</span>
+					</div>
+				</div>
+
+				<div class="product-price">
+					₹<span
+						th:text="${#numbers.formatDecimal(product.price - ((product.discount/100)* product.price), 0, 'COMMA', 0, 'POINT')}">1,10,999</span>
+					<span class="original-price"> ₹<span
+						th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')}">1,25,999</span>
+					</span> <span class="discount-badge" th:if="${product.discount >= 0}"
+						th:text="${product.discount + '% OFF'}">12% OFF</span>
+
+				</div>
+
+				<h1 th:text="${product.description}">Qualcomm Snapdragon 8 Gen
+					3</h1>
+
+
+				<!-- Product Options 
+                <div class="product-options">
+                    <div class="option-group" th:if="${not #lists.isEmpty(product.colorOptions)}">
+                        <h3 class="option-title">Brand Color</h3>
+                        <div class="color-options">
+                            <button th:each="color : ${product.colorOptions}" 
+                                    th:class="'option-button ' + (${color.value == product.selectedColor} ? 'selected' : '')"
+                                    th:text="${color.name}">Titanium Gray</button>
+                        </div>
+                    </div>
+
+                    <div class="option-group" th:if="${not #lists.isEmpty(product.ramOptions)}">
+                        <h3 class="option-title">RAM</h3>
+                        <div class="ram-options">
+                            <button th:each="ram : ${product.ramOptions}" 
+                                    th:class="'option-button ' + (${ram.value == product.selectedRam} ? 'selected' : '')"
+                                    th:text="${ram.name}">12GB</button>
+                        </div>
+                    </div>
+
+                    <div class="option-group" th:if="${not #lists.isEmpty(product.storageOptions)}">
+                        <h3 class="option-title">Internal Storage</h3>
+                        <div class="storage-options">
+                            <button th:each="storage : ${product.storageOptions}" 
+                                    th:class="'option-button ' + (${storage.value == product.selectedStorage} ? 'selected' : '')"
+                                    th:text="${storage.name}">256GB</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="product-features" th:if="${not #lists.isEmpty(product.features)}">
+                    <div class="feature-item" th:each="feature : ${product.features}">
+                        <i th:class="${feature.icon}"></i>
+                        <span th:text="${feature.name}">1 Year Warranty</span>
+                    </div>
+                </div>
+-->
+				<!-- Redesigned Specifications Section -->
+				<div class="specifications">
+					<h3 class="specs-title">Specifications</h3>
+
+					<div class="specs-tabs">
+						<button class="specs-tab active" data-tab="general">General</button>
+						<button class="specs-tab" data-tab="performance">Performance</button>
+						<button class="specs-tab" data-tab="display">Display</button>
+						<button class="specs-tab" data-tab="camera">Camera</button>
+					</div>
+
+
+
+					<div class="specs-content active" id="general-specs">
+						<table class="specs-table">
+							<tr th:each="spec : ${generalSpecs}">
+								<th th:text="${spec.attributeName}">Brand</th>
+								<td th:text="${spec.attributeValue}">Samsung</td>
+							</tr>
+						</table>
+					</div>
+
+					<div class="specs-content" id="performance-specs">
+						<table class="specs-table">
+							<tr th:each="spec : ${performanceSpecs}">
+								<th th:text="${spec.attributeName}">Processor</th>
+								<td th:text="${spec.attributeValue}">Qualcomm Snapdragon 8
+									Gen 3</td>
+							</tr>
+						</table>
+					</div>
+
+					<div class="specs-content" id="display-specs">
+						<table class="specs-table">
+							<tr th:each="spec : ${displaySpecs}">
+								<th th:text="${spec.attributeName}">Display Type</th>
+								<td th:text="${spec.attributeValue}">Dynamic AMOLED 2X</td>
+							</tr>
+						</table>
+					</div>
+
+					<div class="specs-content" id="camera-specs">
+						<table class="specs-table">
+							<tr th:each="spec : ${cameraSpecs}">
+								<th th:text="${spec.attributeName}">Main Camera</th>
+								<td th:text="${spec.attributeValue}">200MP, f/1.7, OIS</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Footer -->
+	<footer>
+		<div class="container">
+			<div class="footer-columns">
+				<div class="footer-column">
+					<h3>Shop</h3>
+					<ul>
+						<li><a href="products-page.html">Products</a></li>
+						<li><a href="#">Shipping and Returns</a></li>
+						<li><a href="order-confirmation.html">Track My Order</a></li>
+						<li><a href="profile-new.html">My Account</a></li>
+					</ul>
+				</div>
+				<div class="footer-column">
+					<h3>About</h3>
+					<ul>
+						<li><a href="#">Privacy Policy</a></li>
+						<li><a href="#">Cookie Policy</a></li>
+						<li><a href="#">Terms & Conditions</a></li>
+					</ul>
+				</div>
+				<div class="footer-column">
+					<h3>Do You Need Help?</h3>
+					<ul>
+						<li><a href="#">Contact Us</a></li>
+						<li><a href="#">FAQs</a></li>
+					</ul>
+				</div>
+			</div>
+
+			<div class="payment-methods">
+				<h3>Payments Accepted</h3>
+				<div class="payment-icons">
+					<img src="../img/Footers/image 1.jpg" alt="Visa"> <img
+						src="../img/Footers/image 2.jpg" alt="Mastercard"> <img
+						src="../img/Footers/image 4.jpg" alt="PayPal"> <img
+						src="../img/Footers/image 5.jpg" alt="American Express"> <img
+						src="../img/Footers/image 6.jpg" alt="Apple Pay"> <img
+						src="../img/Footers/image 7.jpg" alt="Google Pay">
+				</div>
+			</div>
+
+			<div class="footer-divider"></div>
+
+			<div class="footer-bottom">
+				<div class="footer-logo">
+					<img
+						src="../img/Headers/Your_paragraph_text_1-removebg-preview.png"
+						alt="ELECXA">
+				</div>
+				<div class="social-icons">
+					<a href="#"><i class="fab fa-facebook-f"></i></a> <a href="#"><i
+						class="fab fa-twitter"></i></a> <a href="#"><i
+						class="fab fa-instagram"></i></a> <a href="#"><i
+						class="fab fa-youtube"></i></a>
+				</div>
+			</div>
+
+			<div class="footer-divider"></div>
+
+			<div class="copyright">
+				<p>Elecxa © 2025 All Rights Reserved</p>
+			</div>
+		</div>
+	</footer>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+	<script>
+		document.addEventListener('DOMContentLoaded',function() {
+
+			const userId = sessionStorage.getItem('userId');
+            if (userId) {
+                document.getElementById("profileLink").href = "/profile?id=" + userId;
+                document.getElementById("cartLink").href = "/cart?id=" + userId;					
+			}
+		});
+		
+		
+		
+		async function initiatePayment(amount , productId) {
+        	const uid = sessionStorage.getItem("userId");
+        	const cid = sessionStorage.getItem("cartId");
+            let token = sessionStorage.getItem("accessToken");
+
+            await fetch(`http://localhost:8080/api/payments/initiate?amount=${amount}`, {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                const options = {
+                    key: data.razorpayKey,
+                    amount: data.amount * 100,
+                    currency: data.currency,
+                    name: "Elecxa Store",
+                    description: "Electronics Purchase",
+                    order_id: data.orderId,
+                    handler: async function (response) {
+                        alert('Payment successful! ID: ' + response.razorpay_payment_id);
+                        let response1 = await fetch(`http://localhost:8080/api/orders/place?userId=${uid}&cartId=${cid}&totalAmount=${amount}&productId=${productId}`,{
+                        	method:"POST",
+                        	 headers: {
+                     	        "Content-Type": "application/json",
+                                "Authorization": `Bearer ${token}`
+
+                     	    }
+                        })
+                        
+                        let orderInfo =await response1.json();
+                        
+                        await fetch(`http://localhost:8080/api/payments/save?razorpayOrderId=${response.razorpay_payment_id}&amount=${amount}&userId=${uid}&orderId=${orderInfo.orderId}`,{
+                        	method:"POST",
+                        	 headers: {
+                        	        "Content-Type": "application/json",
+                                    "Authorization": `Bearer ${token}`
+
+                        	    }
+                        })
+                    },
+                    prefill: {
+                        name: "Selva Ganapathi",
+                        email: "2k21cse135@kiot.ac.in",
+                        contact: "9080846517"
+                    },
+                    theme: {
+                        color: "#3399cc"
+                    }
+                };
+                const rzp = new Razorpay(options);
+                rzp.open();
+            })
+            .catch(error => console.error('Error initiating payment:', error));
+        }
+        
+        window.initiatePayment = initiatePayment;
+
+    </script>
+
+	<script src="../js/script.js"></script>
+	<script src="../js/product-tabs.js"></script>
+    <script src="../js/search.js"></script>
+    <script src="../js/header-template.js"></script>
+</body>
+</html>

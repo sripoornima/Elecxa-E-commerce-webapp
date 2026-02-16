@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ELECXA - Payment</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/checkout.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        .payment-methods-container {
+            margin-bottom: 30px;
+        }
+        
+        .payment-method {
+            margin-bottom: 20px;
+            border: 1.5px solid rgba(0, 0, 0, 0.08);
+            border-radius: 10px;
+            padding: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .payment-method.selected {
+            border-color: var(--primary-color);
+            background-color: rgba(102, 52, 225, 0.05);
+        }
+        
+        .payment-method-header {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            position: relative;
+        }
+        
+        .payment-method-radio {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            border: 2px solid rgba(0, 0, 0, 0.2);
+            margin-right: 15px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .payment-method.selected .payment-method-radio::after {
+            content: "";
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+        }
+        
+        .payment-method-title {
+            font-weight: 600;
+            font-size: 15px;
+        }
+        
+        .payment-method-icon {
+            margin-left: auto;
+            display: flex;
+            gap: 8px;
+        }
+        
+        .payment-method-icon img {
+            height: 24px;
+            object-fit: contain;
+        }
+        
+        .payment-method-content {
+            padding: 20px 15px;
+            border-top: 1px solid rgba(0, 0, 0, 0.08);
+            display: none;
+        }
+        
+        .payment-method.selected .payment-method-content {
+            display: block;
+        }
+        
+        .card-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .card-form .form-field:first-child {
+            grid-column: span 2;
+        }
+        
+        .secure-badge {
+            display: flex;
+            align-items: center;
+            margin-top: 25px;
+            padding: 12px;
+            background-color: rgba(0, 128, 0, 0.05);
+            border-radius: 8px;
+        }
+        
+        .secure-badge i {
+            color: green;
+            font-size: 18px;
+            margin-right: 10px;
+        }
+        
+        .secure-badge-text {
+            font-size: 14px;
+        }
+        
+        .shipping-info {
+            margin: 15px 0;
+            padding: 10px;
+            background-color: rgba(0, 0, 0, 0.03);
+            border-radius: 6px;
+            font-size: 14px;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .order-total {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: rgba(102, 52, 225, 0.05);
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .order-total-label {
+            font-size: 16px;
+            font-weight: 600;
+        }
+        
+        .order-total-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary-dark);
+        }
+        
+        .payment-buttons {
+            margin-top: 25px;
+        }
+        
+        .pay-button {
+            width: 100%;
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 600;
+            font-size: 16px;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            display: block;
+            text-decoration: none;
+        }
+        
+        .pay-button:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 15px;
+            color: var(--text-dark);
+            font-size: 14px;
+            text-decoration: none;
+        }
+        
+        .back-link:hover {
+            color: var(--primary-color);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <header class="header">
+        <div class="overlap-group">
+            <a th:href="@{/}"><img class="head-logo" src="../img/Headers/Your_paragraph_text_1-removebg-preview.png" alt="ELECXA" /></a>
+            
+            <div class="header-center">
+                <div class="div">
+                    <div class="menu">
+                        <i class="fas fa-bars"></i>
+                    </div>
+                    <div class="text-wrapper-2">Menu</div>
+                </div>
+                <div class="overlap">
+                    <div class="search-normal">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <div class="text-wrapper">Search by Categories, Products</div>
+                </div>
+            </div>
+
+            <div class="header-right">
+                <div class="icon-user">
+                    <a th:href="@{/profile?id=1}">
+                        <i class="fas fa-user-circle"></i>
+                        <span>Account</span>
+                    </a>
+                </div>
+                <div class="icon-cart-alt">
+                    <a th:href="@{/cart?id=2}">
+                        <i class="fas fa-shopping-basket"></i>
+                        <span>Cart</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Checkout Content -->
+    <div class="checkout-container">
+        <!-- Checkout Progress -->
+        <div class="checkout-progress">
+            <div class="progress-bar" style="width: 66%"></div>
+            <div class="progress-step completed">
+                <span class="progress-step-text">Your Details</span>
+            </div>
+            <div class="progress-step completed">
+                <span class="progress-step-text">Final Checkout</span>
+            </div>
+            <div class="progress-step active">
+                <span class="progress-step-text">Payment</span>
+            </div>
+        </div>
+
+        <!-- Payment Form -->
+        <form id="payment-form" th:action="@{/checkout/process-payment}" method="post">
+            <!-- Payment Content -->
+            <div class="checkout-content">
+                <!-- Payment Options Panel -->
+                <div class="details-panel">
+                    <h3 class="panel-title">Payment Method</h3>
+                    
+                    <div class="payment-methods-container">
+                        <div class="payment-method" th:class="${selectedPaymentMethod == 'card' ? 'payment-method selected' : 'payment-method'}" data-method="card">
+                            <div class="payment-method-header">
+                                <div class="payment-method-radio"></div>
+                                <div class="payment-method-title">Credit/Debit Card</div>
+                                <div class="payment-method-icon">
+                                    <img src="../img/payment/visa.svg" alt="Visa">
+                                    <img src="../img/payment/mastercard.svg" alt="Mastercard">
+                                    <img src="../img/payment/amex.svg" alt="American Express">
+                                </div>
+                            </div>
+                            <div class="payment-method-content">
+                                <div class="card-form">
+                                    <div class="form-field">
+                                        <input type="text" class="input-field" id="card-number" name="cardNumber" placeholder="Card Number" th:value="${paymentInfo?.cardNumber}">
+                                        <label for="card-number" class="field-label">Card Number</label>
+                                        <span class="error-message" th:if="${#fields.hasErrors('cardNumber')}" th:errors="*{cardNumber}"></span>
+                                    </div>
+                                    <div class="form-field">
+                                        <input type="text" class="input-field" id="expiry" name="expiry" placeholder="MM/YY" th:value="${paymentInfo?.expiry}">
+                                        <label for="expiry" class="field-label">Expiry Date</label>
+                                        <span class="error-message" th:if="${#fields.hasErrors('expiry')}" th:errors="*{expiry}"></span>
+                                    </div>
+                                    <div class="form-field">
+                                        <input type="text" class="input-field" id="cvv" name="cvv" placeholder="CVV" th:value="${paymentInfo?.cvv}">
+                                        <label for="cvv" class="field-label">CVV</label>
+                                        <span class="error-message" th:if="${#fields.hasErrors('cvv')}" th:errors="*{cvv}"></span>
+                                    </div>
+                                </div>
+                                <div class="secure-badge">
+                                    <i class="fas fa-lock"></i>
+                                    <span class="secure-badge-text">Your payment information is secure and encrypted.</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="payment-method" th:class="${selectedPaymentMethod == 'upi' ? 'payment-method selected' : 'payment-method'}" data-method="upi">
+                            <div class="payment-method-header">
+                                <div class="payment-method-radio"></div>
+                                <div class="payment-method-title">UPI Payment</div>
+                                <div class="payment-method-icon">
+                                    <img src="../img/payment/upi.svg" alt="UPI">
+                                    <img src="../img/payment/gpay.svg" alt="Google Pay">
+                                    <img src="../img/payment/phonepe.svg" alt="PhonePe">
+                                </div>
+                            </div>
+                            <div class="payment-method-content">
+                                <div class="form-field">
+                                    <input type="text" class="input-field" id="upi-id" name="upiId" placeholder="Enter UPI ID" th:value="${paymentInfo?.upiId}">
+                                    <label for="upi-id" class="field-label">UPI ID</label>
+                                    <span class="error-message" th:if="${#fields.hasErrors('upiId')}" th:errors="*{upiId}"></span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="payment-method" th:class="${selectedPaymentMethod == 'netbanking' ? 'payment-method selected' : 'payment-method'}" data-method="netbanking">
+                            <div class="payment-method-header">
+                                <div class="payment-method-radio"></div>
+                                <div class="payment-method-title">Net Banking</div>
+                                <div class="payment-method-icon">
+                                    <img src="../img/payment/bank.svg" alt="Net Banking">
+                                </div>
+                            </div>
+                            <div class="payment-method-content">
+                                <div class="form-field">
+                                    <select class="input-field" id="bank-select" name="bank">
+                                        <option value="">Select Bank</option>
+                                        <option th:each="bank : ${banks}" 
+                                                th:value="${bank.code}" 
+                                                th:text="${bank.name}"
+                                                th:selected="${paymentInfo?.bank == bank.code}">
+                                            HDFC Bank
+                                        </option>
+                                    </select>
+                                    <label for="bank-select" class="field-label">Select Bank</label>
+                                    <span class="error-message" th:if="${#fields.hasErrors('bank')}" th:errors="*{bank}"></span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="payment-method" th:class="${selectedPaymentMethod == 'cod' ? 'payment-method selected' : 'payment-method'}" data-method="cod">
+                            <div class="payment-method-header">
+                                <div class="payment-method-radio"></div>
+                                <div class="payment-method-title">Cash on Delivery</div>
+                                <div class="payment-method-icon">
+                                    <i class="fas fa-money-bill-wave" style="font-size: 20px; color: green;"></i>
+                                </div>
+                            </div>
+                            <div class="payment-method-content">
+                                <p>You'll pay when your order is delivered.</p>
+                                <p class="note">Note: Additional handling charge may apply.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <input type="hidden" id="payment-method" name="paymentMethod" th:value="${selectedPaymentMethod ?: 'card'}">
+                </div>
+                
+                <!-- Order Summary Panel -->
+                <div class="summary-panel">
+                    <h3 class="panel-title">Order Summary</h3>
+                    
+                    <div class="summary-content">
+                        <div class="product-summary" th:each="item : ${orderItems}">
+                            <div class="product-info">
+                                <img th:src="${item.imageUrl}" src="../img/Mobile Phones/image 19.jpg" th:alt="${item.name}" alt="Samsung Galaxy S24 Ultra" class="product-image">
+                                <div class="product-details">
+                                    <h4 th:text="${item.name}">SAMSUNG Galaxy S24 Ultra 5G (12GB RAM, 256GB, Titanium Gray)</h4>
+                                    <div class="product-meta">
+                                        <span th:text="${'Qty: ' + item.quantity}">Qty: 1</span>
+                                        <span class="product-price">₹<span th:text="${#numbers.formatDecimal(item.price, 0, 'COMMA', 0, 'POINT')}">1,10,999</span></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="price-breakdown">
+                            <div class="price-row">
+                                <span>Subtotal</span>
+                                <span>₹<span th:text="${#numbers.formatDecimal(order.subtotal, 0, 'COMMA', 0, 'POINT')}">1,10,999</span></span>
+                            </div>
+                            <div class="price-row">
+                                <span>Shipping</span>
+                                <span th:text="${order.shipping > 0 ? '₹' + #numbers.formatDecimal(order.shipping, 0, 'COMMA', 0, 'POINT') : 'Free'}">Free</span>
+                            </div>
+                            <div class="price-row" th:if="${order.discount > 0}">
+                                <span>Discount</span>
+                                <span>-₹<span th:text="${#numbers.formatDecimal(order.discount, 0, 'COMMA', 0, 'POINT')}">0</span></span>
+                            </div>
+                            <div class="price-row">
+                                <span>Tax</span>
+                                <span>₹<span th:text="${#numbers.formatDecimal(order.tax, 0, 'COMMA', 0, 'POINT')}">0</span></span>
+                            </div>
+                        </div>
+                        
+                        <div class="shipping-info">
+                            <div>
+                                <strong>Ship to:</strong>
+                                <span th:text="${shippingAddress.name}">John Doe</span>
+                            </div>
+                            <a th:href="@{/checkout/details}" href="checkout.html" class="edit-link">Edit</a>
+                        </div>
+                        
+                        <div class="order-total">
+                            <span class="order-total-label">Order Total</span>
+                            <span class="order-total-value">₹<span th:text="${#numbers.formatDecimal(order.total, 0, 'COMMA', 0, 'POINT')}">1,10,999</span></span>
+                        </div>
+                        
+                        <div class="payment-buttons">
+                            <button type="submit" class="pay-button">Complete Payment</button>
+                            <a th:href="@{/checkout/review}" href="checkout-final.html" class="back-link">Back to Review</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-columns">
+                <div class="footer-column">
+                    <h3>Shop</h3>
+                    <ul>
+                        <li><a href="products-page.html">Products</a></li>
+                        <li><a href="#">Shipping and Returns</a></li>
+                        <li><a href="order-confirmation.html">Track My Order</a></li>
+                        <li><a href="profile-new.html">My Account</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>About</h3>
+                    <ul>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Cookie Policy</a></li>
+                        <li><a href="#">Terms & Conditions</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Do You Need Help?</h3>
+                    <ul>
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">FAQs</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="payment-methods">
+                <h3>Payments Accepted</h3>
+                <div class="payment-icons">
+                    <img src="../img/Footers/image 1.jpg" alt="Visa">
+                    <img src="../img/Footers/image 2.jpg" alt="Mastercard">
+                    <img src="../img/Footers/image 4.jpg" alt="PayPal">
+                    <img src="../img/Footers/image 5.jpg" alt="American Express">
+                    <img src="../img/Footers/image 6.jpg" alt="Apple Pay">
+                    <img src="../img/Footers/image 7.jpg" alt="Google Pay">
+                </div>
+            </div>
+            
+            <div class="footer-divider"></div>
+            
+            <div class="footer-bottom">
+                <div class="footer-logo">
+                    <img src="../img/Headers/Your_paragraph_text_1-removebg-preview.png" alt="ELECXA">
+                </div>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-divider"></div>
+            
+            <div class="copyright">
+                <p>Elecxa © 2025 All Rights Reserved</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../js/script.js"></script>
+    <script>
+        // Payment method selection
+        document.querySelectorAll('.payment-method').forEach(method => {
+            method.addEventListener('click', function() {
+                // Remove selected class from all methods
+                document.querySelectorAll('.payment-method').forEach(m => {
+                    m.classList.remove('selected');
+                });
+                
+                // Add selected class to clicked method
+                this.classList.add('selected');
+                
+                // Update hidden input value
+                document.getElementById('payment-method').value = this.dataset.method;
+            });
+        });
+    </script>
+</body>
+</html> 

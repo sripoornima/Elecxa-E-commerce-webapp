@@ -1,0 +1,289 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Orders - ELECXA</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" th:href="@{/images/favicon.ico}">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/orders.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header th:replace="fragments/header :: header"></header>
+
+    <!-- Main Content -->
+    <main class="container">
+        <div class="page-header">
+            <a href="/profile" class="back-button">
+                <i class="fas fa-arrow-left"></i>
+                Back to Profile
+            </a>
+            <h1>My Orders</h1>
+        </div>
+
+        <div class="orders-container">
+            <div class="orders-header">
+                <div class="orders-title">
+                    <h2>Order History</h2>
+                    <p class="orders-subtitle" th:text="${#lists.size(orders)} + ' orders found'">6 orders found</p>
+                </div>
+                <div class="orders-filter">
+                    <select class="filter-select">
+                        <option value="all">All Orders</option>
+                        <option value="processing">Processing</option>
+                        <option value="shipped">Shipped</option>
+                        <option value="delivered">Delivered</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="orders-list" th:if="${not #lists.isEmpty(orders)}">
+                <!-- Order 1 -->
+                <div class="order-card">
+                    <div class="order-header">
+                        <div class="order-info">
+                            <span class="order-number">Order #ELX-2024-001</span>
+                            <span class="order-date">March 15, 2024</span>
+                        </div>
+                        <span class="order-status processing">Processing</span>
+                    </div>
+                    <div class="order-items">
+                        <div class="order-item">
+                            <img src="/images/products/iphone-15-pro-max.jpg" alt="iPhone 15 Pro Max">
+                            <div class="item-details">
+                                <h4>iPhone 15 Pro Max</h4>
+                                <p>Natural Titanium, 256GB</p>
+                                <span class="item-price">₹1,59,900</span>
+                            </div>
+                            <span class="item-quantity">Qty: 1</span>
+                        </div>
+                    </div>
+                    <div class="order-footer">
+                        <div class="order-total">
+                            <span>Total:</span>
+                            <span class="total-amount">₹1,59,900</span>
+                        </div>
+                        <div class="order-actions">
+                            <button class="track-order-btn">
+                                <i class="fas fa-truck"></i>
+                                Track Order
+                            </button>
+                            <button class="view-details-btn">
+                                <i class="fas fa-eye"></i>
+                                View Details
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Order 2 -->
+                <div class="order-card">
+                    <div class="order-header">
+                        <div class="order-info">
+                            <span class="order-number">Order #ELX-2024-002</span>
+                            <span class="order-date">March 10, 2024</span>
+                        </div>
+                        <span class="order-status shipped">Shipped</span>
+                    </div>
+                    <div class="order-items">
+                        <div class="order-item">
+                            <img src="/images/products/macbook-pro.jpg" alt="MacBook Pro">
+                            <div class="item-details">
+                                <h4>MacBook Pro 14"</h4>
+                                <p>M3 Pro, 18GB RAM, 512GB SSD</p>
+                                <span class="item-price">₹1,99,900</span>
+                            </div>
+                            <span class="item-quantity">Qty: 1</span>
+                        </div>
+                    </div>
+                    <div class="order-footer">
+                        <div class="order-total">
+                            <span>Total:</span>
+                            <span class="total-amount">₹1,99,900</span>
+                        </div>
+                        <div class="order-actions">
+                            <button class="track-order-btn">
+                                <i class="fas fa-truck"></i>
+                                Track Order
+                            </button>
+                            <button class="view-details-btn">
+                                <i class="fas fa-eye"></i>
+                                View Details
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Order 3 -->
+                <div class="order-card">
+                    <div class="order-header">
+                        <div class="order-info">
+                            <span class="order-number">Order #ELX-2024-003</span>
+                            <span class="order-date">March 5, 2024</span>
+                        </div>
+                        <span class="order-status delivered">Delivered</span>
+                    </div>
+                    <div class="order-items">
+                        <div class="order-item">
+                            <img src="/images/products/airpods-pro.jpg" alt="AirPods Pro">
+                            <div class="item-details">
+                                <h4>AirPods Pro (2nd Generation)</h4>
+                                <p>USB-C Charging Case</p>
+                                <span class="item-price">₹24,900</span>
+                            </div>
+                            <span class="item-quantity">Qty: 1</span>
+                        </div>
+                    </div>
+                    <div class="order-footer">
+                        <div class="order-total">
+                            <span>Total:</span>
+                            <span class="total-amount">₹24,900</span>
+                        </div>
+                        <div class="order-actions">
+                            <button class="view-details-btn">
+                                <i class="fas fa-eye"></i>
+                                View Details
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Order 4 -->
+                <div class="order-card">
+                    <div class="order-header">
+                        <div class="order-info">
+                            <span class="order-number">Order #ELX-2024-004</span>
+                            <span class="order-date">March 1, 2024</span>
+                        </div>
+                        <span class="order-status processing">Processing</span>
+                    </div>
+                    <div class="order-items">
+                        <div class="order-item">
+                            <img src="/images/products/apple-watch.jpg" alt="Apple Watch">
+                            <div class="item-details">
+                                <h4>Apple Watch Series 9</h4>
+                                <p>GPS, 45mm, Midnight Aluminium Case</p>
+                                <span class="item-price">₹41,900</span>
+                            </div>
+                            <span class="item-quantity">Qty: 1</span>
+                        </div>
+                    </div>
+                    <div class="order-footer">
+                        <div class="order-total">
+                            <span>Total:</span>
+                            <span class="total-amount">₹41,900</span>
+                        </div>
+                        <div class="order-actions">
+                            <button class="track-order-btn">
+                                <i class="fas fa-truck"></i>
+                                Track Order
+                            </button>
+                            <button class="view-details-btn">
+                                <i class="fas fa-eye"></i>
+                                View Details
+                            </button>
+                            <button class="cancel-order-btn">
+                                <i class="fas fa-times"></i>
+                                Cancel Order
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Order 5 -->
+                <div class="order-card">
+                    <div class="order-header">
+                        <div class="order-info">
+                            <span class="order-number">Order #ELX-2024-005</span>
+                            <span class="order-date">February 25, 2024</span>
+                        </div>
+                        <span class="order-status cancelled">Cancelled</span>
+                    </div>
+                    <div class="order-items">
+                        <div class="order-item">
+                            <img src="/images/products/ipad-pro.jpg" alt="iPad Pro">
+                            <div class="item-details">
+                                <h4>iPad Pro 12.9-inch</h4>
+                                <p>M2 chip, 256GB, Wi-Fi</p>
+                                <span class="item-price">₹1,29,900</span>
+                            </div>
+                            <span class="item-quantity">Qty: 1</span>
+                        </div>
+                    </div>
+                    <div class="order-footer">
+                        <div class="order-total">
+                            <span>Total:</span>
+                            <span class="total-amount">₹1,29,900</span>
+                        </div>
+                        <div class="order-actions">
+                            <button class="view-details-btn">
+                                <i class="fas fa-eye"></i>
+                                View Details
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Order 6 -->
+                <div class="order-card">
+                    <div class="order-header">
+                        <div class="order-info">
+                            <span class="order-number">Order #ELX-2024-006</span>
+                            <span class="order-date">February 20, 2024</span>
+                        </div>
+                        <span class="order-status delivered">Delivered</span>
+                    </div>
+                    <div class="order-items">
+                        <div class="order-item">
+                            <img src="/images/products/magic-keyboard.jpg" alt="Magic Keyboard">
+                            <div class="item-details">
+                                <h4>Magic Keyboard</h4>
+                                <p>For iPad Pro 12.9-inch</p>
+                                <span class="item-price">₹32,900</span>
+                            </div>
+                            <span class="item-quantity">Qty: 1</span>
+                        </div>
+                    </div>
+                    <div class="order-footer">
+                        <div class="order-total">
+                            <span>Total:</span>
+                            <span class="total-amount">₹32,900</span>
+                        </div>
+                        <div class="order-actions">
+                            <button class="view-details-btn">
+                                <i class="fas fa-eye"></i>
+                                View Details
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- No Orders Message -->
+            <div class="no-orders" th:if="${#lists.isEmpty(orders)}">
+                <i class="fas fa-shopping-bag"></i>
+                <h3>No Orders Yet</h3>
+                <p>Looks like you haven't placed any orders yet.</p>
+                <a href="/products" class="shop-now-btn">Start Shopping</a>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer th:replace="fragments/footer :: footer"></footer>
+
+    <!-- JavaScript -->
+    <script th:src="@{/js/orders.js}"></script>
+</body>
+</html> 

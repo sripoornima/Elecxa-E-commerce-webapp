@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/base :: head('Home')}"></head>
+<body>
+    <header th:replace="~{layout/base :: header}"></header>
+
+    <th:block th:fragment="content">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="swiper-container">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide">
+                        <img th:src="@{/img/Hero-Section/image 16.png}" alt="Galaxy S25 Ultra">
+                    </div>
+                    <div class="swiper-slide">
+                        <img th:src="@{/img/Hero-Section/image 17.png}" alt="New MacBook Pro">
+                    </div>
+                    <div class="swiper-slide">
+                        <img th:src="@{/img/Hero-Section/image 18.png}" alt="Wireless Headphones">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Categories Section -->
+        <section id="shop-categories" class="categories">
+            <div class="container">
+                <h2>Shop by Categories</h2>
+                <div class="categories-wrapper">
+                    <div class="category-grid">
+                        <div class="category-item" th:each="category : ${categories}">
+                            <a th:href="@{/products(category=${category.slug})}" style="text-decoration: none; color: inherit;">
+                                <div class="category-icon">
+                                    <img th:src="@{${category.iconUrl}}" th:alt="${category.name}">
+                                </div>
+                                <p th:text="${category.name}">Category Name</p>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="scroll-indicator">
+                        <p>Scroll to explore more categories</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Featured Products Grid -->
+        <section class="featured-grid">
+            <div class="container">
+                <div class="grid-container">
+                    <video class="featured-video" autoplay loop muted playsinline>
+                        <source th:src="@{/MP4/Bento Grid Products Show.mp4}" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+            </div>
+        </section>
+
+        <!-- Popular Products Section -->
+        <section class="popular-products">
+            <div class="container">
+                <h2>Discover Range Of Popular Products</h2>
+                
+                <div class="product-category" th:each="product : ${popularProducts}">
+                    <div class="product-info">
+                        <h3 th:text="${product.name}">Product Name</h3>
+                        <p th:text="${product.description}">Product Description</p>
+                        <button class="btn-secondary">Discover More</button>
+                    </div>
+                    <div class="product-image">
+                        <video autoplay loop muted playsinline>
+                            <source th:src="@{${product.videoUrl}}" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Brand Banner -->
+        <section class="brand-banner">
+            <div class="container">
+                <div class="banner-content">
+                    <img th:src="@{/img/Headers/Your_paragraph_text_1-removebg-preview.png}" alt="ELECXA Logo" class="banner-logo">
+                    <h2>Explore More Products on Elecxa</h2>
+                    <p>Your ultimate companion for this month's eclipses.</p>
+                    <div class="center-button">
+                        <button id="explore-more-btn" class="btn-primary">Explore More</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Partner Brands -->
+        <section class="partner-brands">
+            <div class="container">
+                <h2>Our Partner Brands</h2>
+                <div class="brands-container">
+                    <img th:each="brand : ${partnerBrands}" 
+                         th:src="@{${brand.logoUrl}}" 
+                         th:alt="${brand.name}">
+                </div>
+            </div>
+        </section>
+    </th:block>
+
+    <footer th:replace="~{layout/base :: footer}"></footer>
+    <th:block th:replace="~{layout/base :: scripts}"></th:block>
+</body>
+</html> 

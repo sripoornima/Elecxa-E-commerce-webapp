@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(~{::title}, ~{::section})}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports - Admin Panel</title>
+</head>
+<body>
+    <section>
+        <!-- Page Title -->
+        <div class="d-sm-flex align-items-center justify-content-between mb-4">
+            <h1 class="h3 mb-0 text-gray-800">Reports</h1>
+            <div class="btn-group">
+                <button type="button" class="btn btn-sm btn-primary dropdown-toggle shadow-sm" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fas fa-download fa-sm text-white-50"></i> Export Report
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li><a class="dropdown-item" href="#">Export as PDF</a></li>
+                    <li><a class="dropdown-item" href="#">Export as Excel</a></li>
+                    <li><a class="dropdown-item" href="#">Export as CSV</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Report Type Selection -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Report Options</h6>
+            </div>
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-md-4 mb-3 mb-md-0">
+                        <label for="reportType" class="form-label">Report Type</label>
+                        <select class="form-select" id="reportType">
+                            <option value="sales" selected>Sales Report</option>
+                            <option value="categories">Category Report</option>
+                            <option value="products">Product Performance</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4 mb-3 mb-md-0">
+                        <label for="timePeriod" class="form-label">Time Period</label>
+                        <select class="form-select" id="timePeriod">
+                            <option value="weekly" th:selected="${reportType == 'weekly'}">Weekly</option>
+                            <option value="monthly" th:selected="${reportType == 'monthly'}">Monthly</option>
+                            <option value="yearly" th:selected="${reportType == 'yearly'}">Yearly</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4 d-flex align-items-end">
+                        <button id="generateReport" class="btn btn-primary w-100">Generate Report</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sales Report -->
+        <div id="salesReportSection" class="report-section">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">Sales Overview</h6>
+                    <div class="dropdown no-arrow">
+                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
+                            <div class="dropdown-header">View Options:</div>
+                            <a class="dropdown-item" href="#" data-period="weekly">Weekly</a>
+                            <a class="dropdown-item" href="#" data-period="monthly">Monthly</a>
+                            <a class="dropdown-item" href="#" data-period="yearly">Yearly</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="#">Export Data</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container">
+                        <canvas id="salesChart" th:data-sales="${salesData}"></canvas>
+                    </div>
+                    <div class="mt-4">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-hover" width="100%" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th>Period</th>
+                                        <th>Orders</th>
+                                        <th>Revenue</th>
+                                        <th>Growth</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="data,stat : ${salesData}" th:if="${stat.index > 0}">
+                                        <td th:text="${data[0]}">Period</td>
+                                        <td th:text="${data[1]}">Orders</td>
+                                        <td th:text="${#numbers.formatCurrency(data[2])}">Revenue</td>
+                                        <td>
+                                            <span th:text="${data[3] + '%'}" 
+                                                  th:class="${data[3] >= 0 ? 'text-success' : 'text-danger'}">Growth</span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Category Report -->
+        <div id="categoryReportSection" class="report-section" style="display: none;">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Category Analysis</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="chart-container">
+                                <canvas id="categoryChart" th:data-category="${categoryData}"></canvas>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-hover" width="100%" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th>Category</th>
+                                            <th>Sales</th>
+                                            <th>Revenue</th>
+                                            <th>Percentage</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="data, stat : ${categoryData}" th:if="${stat.index > 0}">
+                                            <td th:text="${data[0]}">Category</td>
+                                            <td th:text="${data[1]}">Sales</td>
+                                            <td th:text="${#numbers.formatCurrency(data[2])}">Revenue</td>
+                                            <td th:text="${data[3]} + '%'">Percentage</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Product Performance Report -->
+        <div id="productReportSection" class="report-section" style="display: none;">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Product Performance</h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Category</th>
+                                    <th>Sales</th>
+                                    <th>Revenue</th>
+                                    <th>Avg. Rating</th>
+                                    <th>Stock</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="data, stat : ${productPerformanceData}" th:if="${stat.index > 0}">
+                                    <td th:text="${data[0]}">Product Name</td>
+                                    <td th:text="${data[1]}">Category</td>
+                                    <td th:text="${data[2]}">Sales</td>
+                                    <td th:text="${#numbers.formatCurrency(data[3])}">Revenue</td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <span th:text="${data[4]}">4.5</span>
+                                            <div class="ms-2">
+                                                <i class="fas fa-star text-warning"></i>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td th:text="${data[5]}">Stock</td>
+                                    <td>
+                                        <span th:class="${'badge bg-' + (data[6] == 'In Stock' ? 'success' : 'danger')}"
+                                              th:text="${data[6]}">Status</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Page specific scripts -->
+    <th:block th:fragment="scripts">
+        <script th:inline="javascript">
+            document.addEventListener('DOMContentLoaded', function() {
+                // Get report data from Thymeleaf
+                const salesData = /*[[${salesData}]]*/ [];
+                const categoryData = /*[[${categoryData}]]*/ [];
+                const productData = /*[[${productPerformanceData}]]*/ [];
+                
+                // Initialize charts
+                initializeSalesChart(salesData);
+                initializeCategoryChart(categoryData);
+                
+                // Report type switching
+                const reportType = document.getElementById('reportType');
+                const timePeriod = document.getElementById('timePeriod');
+                const generateBtn = document.getElementById('generateReport');
+                
+                const salesSection = document.getElementById('salesReportSection');
+                const categorySection = document.getElementById('categoryReportSection');
+                const productSection = document.getElementById('productReportSection');
+                
+                function showReportSection(type) {
+                    salesSection.style.display = type === 'sales' ? 'block' : 'none';
+                    categorySection.style.display = type === 'categories' ? 'block' : 'none';
+                    productSection.style.display = type === 'products' ? 'block' : 'none';
+                }
+                
+                // Show initial report type
+                showReportSection('sales');
+                
+                // Handle report type change
+                reportType.addEventListener('change', function() {
+                    showReportSection(this.value);
+                });
+                
+                // Handle generate report button
+                generateBtn.addEventListener('click', function() {
+                    const type = reportType.value;
+                    const period = timePeriod.value;
+                    
+                    if (type === 'sales') {
+                        window.location.href = `/reports/sales?period=${period}`;
+                    } else if (type === 'categories') {
+                        window.location.href = '/reports/categories';
+                    } else if (type === 'products') {
+                        window.location.href = '/reports/products';
+                    }
+                });
+                
+                // Handle period change in dropdown menu
+                document.querySelectorAll('.dropdown-item[data-period]').forEach(item => {
+                    item.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const period = this.getAttribute('data-period');
+                        window.location.href = `/reports/sales?period=${period}`;
+                    });
+                });
+            });
+            
+            function initializeSalesChart(data) {
+                if (!data || data.length <= 1) return;
+                
+                const ctx = document.getElementById('salesChart').getContext('2d');
+                
+                // Extract labels and data
+                const labels = [];
+                const salesData = [];
+                const revenueData = [];
+                
+                // Skip header row
+                for (let i = 1; i < data.length; i++) {
+                    labels.push(data[i][0]);
+                    salesData.push(data[i][1]);
+                    revenueData.push(data[i][2]);
+                }
+                
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [
+                            {
+                                label: 'Orders',
+                                data: salesData,
+                                backgroundColor: 'rgba(78, 115, 223, 0.5)',
+                                borderColor: 'rgba(78, 115, 223, 1)',
+                                borderWidth: 1
+                            },
+                            {
+                                label: 'Revenue',
+                                data: revenueData,
+                                type: 'line',
+                                fill: false,
+                                borderColor: 'rgba(28, 200, 138, 1)',
+                                tension: 0.1,
+                                yAxisID: 'y1'
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Orders'
+                                }
+                            },
+                            y1: {
+                                beginAtZero: true,
+                                position: 'right',
+                                title: {
+                                    display: true,
+                                    text: 'Revenue'
+                                },
+                                grid: {
+                                    drawOnChartArea: false
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+            
+            function initializeCategoryChart(data) {
+                if (!data || data.length <= 1) return;
+                
+                const ctx = document.getElementById('categoryChart').getContext('2d');
+                
+                // Extract labels and data
+                const labels = [];
+                const percentages = [];
+                const backgroundColors = [
+                    'rgba(78, 115, 223, 0.8)',
+                    'rgba(28, 200, 138, 0.8)',
+                    'rgba(246, 194, 62, 0.8)',
+                    'rgba(231, 74, 59, 0.8)',
+                    'rgba(54, 185, 204, 0.8)',
+                    'rgba(133, 135, 150, 0.8)'
+                ];
+                
+                // Skip header row
+                for (let i = 1; i < data.length; i++) {
+                    labels.push(data[i][0]);
+                    percentages.push(data[i][3]);
+                }
+                
+                new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            data: percentages,
+                            backgroundColor: backgroundColors,
+                            hoverOffset: 4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: 'right'
+                            }
+                        }
+                    }
+                });
+            }
+        </script>
+    </th:block>
+</body>
+</html>

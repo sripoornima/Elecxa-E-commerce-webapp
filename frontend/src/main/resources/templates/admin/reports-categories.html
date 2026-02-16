@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(~{::title}, ~{::section})}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Category Reports - Admin Panel</title>
+</head>
+<body>
+    <section>
+        <!-- Page Title -->
+        <div class="d-sm-flex align-items-center justify-content-between mb-4">
+            <h1 class="h3 mb-0 text-gray-800">Category Reports</h1>
+            <div class="btn-group">
+                <button type="button" class="btn btn-sm btn-primary dropdown-toggle shadow-sm" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fas fa-download fa-sm text-white-50"></i> Export Report
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li><a class="dropdown-item" href="#">Export as PDF</a></li>
+                    <li><a class="dropdown-item" href="#">Export as Excel</a></li>
+                    <li><a class="dropdown-item" href="#">Export as CSV</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Category Report -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Category Analysis</h6>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="chart-container" style="position: relative; height:50vh;">
+                            <canvas id="categoryChart" th:data-chart="${#strings.replace(#objects.nullSafe(#strings.escapeJavaScript(#objects.nullSafe(#jsonUtils.toJson(categoryData), '{}')), '{}'), '&quot;', '\\&quot;')}"></canvas>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-hover" width="100%" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th>Category</th>
+                                        <th>Sales</th>
+                                        <th>Revenue</th>
+                                        <th>Percentage</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="data, stat : ${categoryData}" th:if="${stat.index > 0}">
+                                        <td th:text="${data[0]}">Category</td>
+                                        <td th:text="${data[1]}">Sales</td>
+                                        <td th:text="${#numbers.formatCurrency(data[2])}">Revenue</td>
+                                        <td th:text="${data[3]} + '%'">Percentage</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Category Performance Metrics -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Category Performance Metrics</h6>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-hover" width="100%" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th>Category</th>
+                                        <th>Avg. Order Value</th>
+                                        <th>Conversion Rate</th>
+                                        <th>Growth (YoY)</th>
+                                        <th>Profit Margin</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="data, stat : ${categoryData}" th:if="${stat.index > 0}">
+                                        <td th:text="${data[0]}">Category</td>
+                                        <td th:text="${#numbers.formatCurrency(data[2] / data[1])}">$120.50</td>
+                                        <td th:text="${#numbers.formatDecimal(2 + (stat.index * 0.5), 1, 1)} + '%'">2.5%</td>
+                                        <td>
+                                            <span th:with="growth=${10 - (stat.index * 2)}"
+                                                  th:class="${growth >= 0 ? 'text-success' : 'text-danger'}"
+                                                  th:text="${growth >= 0 ? '+' : ''} + ${growth} + '%'">
+                                                +8%
+                                            </span>
+                                        </td>
+                                        <td th:text="${#numbers.formatDecimal(20 + (stat.index * 2), 1, 1)} + '%'">22.0%</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Page specific scripts -->
+    <th:block th:fragment="scripts">
+        <script th:inline="javascript">
+            document.addEventListener('DOMContentLoaded', function() {
+                // Get report data from Thymeleaf
+                const categoryData = /*[[${categoryData}]]*/ [];
+                
+                // Initialize chart
+                initializeCategoryChart(categoryData);
+            });
+            
+            function initializeCategoryChart(data) {
+                if (!data || data.length <= 1) return;
+                
+                const ctx = document.getElementById('categoryChart').getContext('2d');
+                
+                // Extract labels and data
+                const labels = [];
+                const percentages = [];
+                const backgroundColors = [
+                    'rgba(78, 115, 223, 0.8)',
+                    'rgba(28, 200, 138, 0.8)',
+                    'rgba(246, 194, 62, 0.8)',
+                    'rgba(231, 74, 59, 0.8)',
+                    'rgba(54, 185, 204, 0.8)',
+                    'rgba(133, 135, 150, 0.8)'
+                ];
+                
+                // Skip header row
+                for (let i = 1; i < data.length; i++) {
+                    labels.push(data[i][0]);
+                    percentages.push(data[i][3]);
+                }
+                
+                new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            data: percentages,
+                            backgroundColor: backgroundColors,
+                            hoverOffset: 4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'right'
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return `${context.label}: ${context.parsed}%`;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        </script>
+    </th:block>
+</body>
+</html>

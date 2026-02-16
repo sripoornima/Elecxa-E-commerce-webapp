@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="~{layout/base :: head('Products')}">
+        <th:block th:fragment="extraStyles">
+            <link rel="stylesheet" th:href="@{/css/products-page.css}">
+        </th:block>
+    </th:block>
+</head>
+<body>
+    <header th:replace="~{layout/base :: header}"></header>
+
+    <th:block th:fragment="content">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="swiper-container">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide">
+                        <img th:src="@{/img/Hero-Section/image 16.png}" alt="Galaxy S25 Ultra">
+                    </div>
+                    <div class="swiper-slide">
+                        <img th:src="@{/img/Hero-Section/image 17.png}" alt="New MacBook Pro">
+                    </div>
+                    <div class="swiper-slide">
+                        <img th:src="@{/img/Hero-Section/image 18.png}" alt="Wireless Headphones">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Breadcrumb Navigation -->
+        <div class="container breadcrumb-container">
+            <div class="breadcrumb">
+                <a th:href="@{/}">Home</a>
+                <span>></span>
+                <span th:text="${categoryName ?:'All Products'}">Products</span>
+            </div>
+        </div>
+
+        <!-- Products Content -->
+        <div class="container">
+            <!-- Filter Categories -->
+            <div class="filter-categories">
+                <div class="category-filter" th:each="filter : ${filters}">
+                    <span th:text="${filter.name}">Category</span>
+                </div>
+                <div class="filter-button">
+                    Filters
+                </div>
+            </div>
+
+            <!-- Products Grid -->
+            <div class="products-grid">
+                <div class="product-card" th:each="product : ${products}">
+                    <div class="wishlist-icon">
+                        <img th:src="@{/img/icons/wishlist.png}" alt="Wishlist">
+                    </div>
+                    <div class="product-image">
+                        <img th:src="${product.imageUrl}" th:alt="${product.name}">
+                    </div>
+                    <h3 th:text="${product.name}">Product Name</h3>
+                    <div class="product-rating">
+                        <img th:src="@{/img/icons/star.png}" alt="Star">
+                        <span th:text="${product.rating}">5</span>
+                        <span th:text="'(' + ${product.reviewCount} + ' Reviews)'"></span>
+                    </div>
+                    <div class="product-price">
+                        <span th:text="'₹' + ${product.currentPrice}">₹70,999</span>
+                        <span th:if="${product.originalPrice}" th:text="'₹' + ${product.originalPrice}">₹74,999</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </th:block>
+
+    <footer th:replace="~{layout/base :: footer}"></footer>
+    <th:block th:replace="~{layout/base :: scripts}"></th:block>
+</body>
+</html> 

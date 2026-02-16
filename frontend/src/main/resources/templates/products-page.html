@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ELECXA - Products</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/products-page.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header Section -->
+    <header class="header">
+        <div class="overlap-group">
+            <a th:href="@{/}"><img class="head-logo" src="../img/Headers/Your_paragraph_text_1-removebg-preview.png" alt="ELECXA" /></a>
+            
+            <div class="header-center">
+                <div class="div">
+                    <div class="menu">
+                        <i class="fas fa-bars"></i>
+                    </div>
+                    <div class="text-wrapper-2">Menu</div>
+                </div>
+                <div class="overlap">
+                    <div class="search-normal">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <div class="text-wrapper">Search by Categories, Products</div>
+                </div>
+            </div>
+
+            <div class="header-right">
+                <div class="icon-user">
+                    <a href="profile-new.html">
+                        <i class="fas fa-user-circle"></i>
+                        <span>Account</span>
+                    </a>
+                </div>
+                <div class="icon-cart-alt">
+                    <a href="addcart-new.html">
+                        <i class="fas fa-shopping-basket"></i>
+                        <span>Cart</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <!-- Swiper -->
+        <div class="swiper-container">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide">
+                    <img src="../img/Hero-Section/image 16.png" alt="Galaxy S25 Ultra">
+                </div>
+                <div class="swiper-slide">
+                    <img src="../img/Hero-Section/image 17.png" alt="New MacBook Pro">
+                </div>
+                <div class="swiper-slide">
+                    <img src="../img/Hero-Section/image 18.png" alt="Wireless Headphones">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Breadcrumb Navigation -->
+    <div class="container breadcrumb-container">
+        <div class="breadcrumb">
+            <a th:href="@{/}">Home</a>
+            <span>></span>
+            <span th:text="${categoryName}">Category Name</span>
+        </div>
+    </div>
+
+    <!-- Products Content -->
+    <div class="container">
+        <!-- Filter Categories -->
+        <div class="filter-categories">
+            <div class="category-filter">
+                Categories
+            </div>
+            <div class="category-filter">
+                Categories
+            </div>
+            <div class="category-filter">
+                Categories
+            </div>
+            <div class="category-filter">
+                Categories
+            </div>
+            <div class="filter-button">
+                Filters
+            </div>
+        </div>
+
+        
+<div class="products-grid">
+    <!-- Loop through products -->
+    <div th:each="product : ${products}" class="product-card">
+        <div class="wishlist-icon">
+            <img src="../img/Elements/heart.png" alt="Heart">
+        </div>
+        <div class="product-image">
+            <img th:src="@{${product.imageUrl}}" alt="Product Image">
+        </div>
+        <h3 th:text="${product.name}">Product Name</h3>
+        <div class="product-rating">
+            <img src="../img/Elements/star.png" alt="Star">
+            <span th:text="${product.rating}">5</span>
+            <span th:text="${product.reviews}">(120 Reviews)</span>
+        </div>
+        <div class="product-price">
+            <span th:text="${product.price}">₹70,999</span>
+            <span th:text="${product.originalPrice}">₹74,999</span>
+        </div>
+    </div>
+</div>
+
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-columns">
+                <div class="footer-column">
+                    <h3>Shop</h3>
+                    <ul>
+                        <li><a href="#">How to Order</a></li>
+                        <li><a href="#">Shipping and Returns</a></li>
+                        <li><a href="#">Track My Order</a></li>
+                        <li><a href="#">My Account</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>About</h3>
+                    <ul>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Cookie Policy</a></li>
+                        <li><a href="#">Terms & Conditions</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Do You Need Help?</h3>
+                    <ul>
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">FAQs</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="payment-methods">
+                <h3>Payments Accepted</h3>
+                <div class="payment-icons">
+                    <img src="../img/Footers/image 1.jpg" alt="Visa">
+                    <img src="../img/Footers/image 2.jpg" alt="Mastercard">
+                    <img src="../img/Footers/image 4.jpg" alt="PayPal">
+                    <img src="../img/Footers/image 5.jpg" alt="American Express">
+                    <img src="../img/Footers/image 6.jpg" alt="Apple Pay">
+                    <img src="../img/Footers/image 7.jpg" alt="Google Pay">
+                </div>
+            </div>
+            
+            <div class="footer-divider"></div>
+            
+            <div class="footer-bottom">
+                <div class="footer-logo">
+                    <img src="../img/Headers/Your_paragraph_text_1-removebg-preview.png" alt="ELECXA">
+                </div>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-divider"></div>
+            
+            <div class="copyright">
+                <p>Elecxa © 2025 All Rights Reserved</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Swiper.js JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var swiper = new Swiper(".swiper-container", {
+                direction: "vertical",
+                slidesPerView: 1,
+                spaceBetween: 0,
+                loop: true,
+                speed: 800,
+                autoplay: {
+                    delay: 5000,
+                    disableOnInteraction: false,
+                },
+                pagination: {
+                    el: ".swiper-pagination",
+                    clickable: true,
+                },
+                navigation: {
+                    nextEl: ".swiper-button-next",
+                    prevEl: ".swiper-button-prev",
+                },
+            });
+        });
+    </script>
+    <script src="js/script.js"></script>
+</body>
+</html>

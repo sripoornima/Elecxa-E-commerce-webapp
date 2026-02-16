@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ELECXA - Electronics Store</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="header">
+        <div class="overlap-group">
+            <a th:href="@{/}"><img class="head-logo" src="../img/Headers/Your_paragraph_text_1-removebg-preview.png" alt="ELECXA" /></a>
+            
+            <div class="header-center">
+                <div class="div">
+                    <div class="menu">
+                        <i class="fas fa-bars"></i>
+                    </div>
+                    <div class="text-wrapper-2">Menu</div>
+                </div>
+                <div class="overlap">
+                    <div class="search-normal">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <div class="text-wrapper">Search by Categories, Products</div>
+                </div>
+            </div>
+
+            <div class="header-right">
+                <div class="icon-user">
+                    <a href="profile-new.html">
+                        <i class="fas fa-circle-user"></i>
+                        <span>Account</span>
+                    </a>
+                </div>
+                <div class="icon-cart-alt">
+                    <a href="addcart-new.html">
+                        <i class="fas fa-bag-shopping"></i>
+                        <span>Cart</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="swiper-container">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide">
+                    <img src="../img/Hero-Section/image 16.png" alt="Galaxy S25 Ultra">
+                    <div class="hero-content">
+                        <button class="btn-primary">Shop Now</button>
+                    </div>
+                </div>
+                <div class="swiper-slide">
+                    <img src="../img/Hero-Section/image 17.png" alt="New MacBook Pro">
+                    <div class="hero-content">
+                        <button class="btn-primary">Shop Now</button>
+                    </div>
+                </div>
+                <div class="swiper-slide">
+                    <img src="../img/Hero-Section/image 18.png" alt="Wireless Headphones">
+                    <div class="hero-content">
+                        <button class="btn-primary">Shop Now</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Categories Section -->
+    <section id="shop-categories" class="categories">
+        <div class="container">
+            <h2>Shop by Categories</h2>
+            <div class="categories-wrapper">
+                <div class="category-grid">
+                    <div class="category-item">
+                        <a th:href="@{/products(category='Mobiles')}" style="text-decoration: none; color: inherit;">
+                            <div class="category-icon">
+                                <img src="../img/Categories Logos/smartphone (1).png" alt="Mobiles">
+                            </div>
+                            <p>Mobiles</p>
+                        </a>
+                    </div>
+                    <div class="category-item">
+                        <a th:href="@{/products(category='Laptops')}" style="text-decoration: none; color: inherit;">
+                            <div class="category-icon">
+                                <img src="../img/Categories Logos/laptop.png" alt="Laptops">
+                            </div>
+                            <p>Laptops</p>
+                        </a>
+                    </div>
+                    <div class="category-item">
+                        <a th:href="@{/products(category='Televisions')}" style="text-decoration: none; color: inherit;">
+                            <div class="category-icon">
+                                <img src="../img/Categories Logos/television (1).png" alt="Televisions">
+                            </div>
+                            <p>Televisions</p>
+                        </a>
+                    </div>
+                    <div class="category-item">
+                        <a th:href="@{/products(category='Home Appliances')}" style="text-decoration: none; color: inherit;">
+                            <div class="category-icon">
+                                <img src="../img/Categories Logos/electric-appliance.png" alt="Home Appliances">
+                            </div>
+                            <p>Home Appliances</p>
+                        </a>
+                    </div>
+                    <div class="category-item">
+                        <a th:href="@{/products(category='Audio Devices')}" style="text-decoration: none; color: inherit;">
+                            <div class="category-icon">
+                                <img src="../img/Categories Logos/home-theater.png" alt="Audio Devices">
+                            </div>
+                            <p>Audio Devices</p>
+                        </a>
+                    </div>
+                    <div class="category-item">
+                        <a th:href="@{/products(category='Wearables')}" style="text-decoration: none; color: inherit;">
+                            <div class="category-icon">
+                                <img src="../img/Categories Logos/sport-watch (1).png" alt="Wearables">
+                            </div>
+                            <p>Wearables</p>
+                        </a>
+                    </div>
+                    <div class="category-item">
+                        <a th:href="@{/products(category='Gaming')}" style="text-decoration: none; color: inherit;">
+                            <div class="category-icon">
+                                <img src="../img/Categories Logos/game-controller.png" alt="Gaming">
+                            </div>
+                            <p>Gaming</p> 
+                        </a>
+                    </div>
+                    <div class="category-item">
+                        <a th:href="@{/products(category='Cameras')}" style="text-decoration: none; color: inherit;">
+                            <div class="category-icon">
+                                <img src="../img/Categories Logos/camera.png" alt="Cameras">
+                            </div>
+                            <p>Cameras</p>
+                        </a>
+                    </div>
+                    <div class="category-item">
+                        <a th:href="@{/products(category='Smart Home')}" style="text-decoration: none; color: inherit;">
+                            <div class="category-icon">
+                                <img src="../img/Categories Logos/smart-home.png" alt="Smart Home">
+                            </div>
+                            <p>Smart Home</p>
+                        </a>
+                    </div>
+                    <div class="category-item">
+                        <a th:href="@{/products(category='Accessories')}" style="text-decoration: none; color: inherit;">
+                            <div class="category-icon">
+                                <img src="../img/Categories Logos/accessories.png" alt="Accessories">
+                            </div>
+                            <p>Accessories</p>
+                        </a>
+                    </div>
+                </div>
+                <div class="scroll-indicator">
+                    <p>Scroll to explore more categories</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Products Grid -->
+    <section class="featured-grid">
+        <div class="container">
+            <div class="grid-container">
+                <video class="featured-video" autoplay loop muted playsinline>
+                    <source src="../MP4/Bento Grid Products Show.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+        </div>
+    </section>
+
+    <!-- Popular Products Section -->
+    <section class="popular-products">
+        <div class="container">
+            <h2>Discover Range Of Popular Products</h2>
+            
+            <!-- Mobile Phones -->
+            <div class="product-category">
+                <div class="product-info">
+                    <h3>Mobile Phones</h3>
+                    <p>Your ultimate companion for this month's eclipses.</p>
+                    <button class="btn-secondary">Discover More</button>
+                </div>
+                <div class="product-image">
+                    <video autoplay loop muted playsinline>
+                        <source src="../MP4/07e782baf44e7d008a602a4565c88e45.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+            </div>
+            
+            <!-- Laptops -->
+            <div class="product-category-dark">
+                <div class="product-info">
+                    <h3>Laptops</h3>
+                    <p>Your ultimate companion for this month's eclipses.</p>
+                    <button class="btn-secondary">Discover More</button>
+                </div>
+                <div class="product-image">
+                    <video autoplay loop muted playsinline>
+                        <source src="../MP4/d21a8baf-b1e5-48b0-a729-82da90dd98ef.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+            </div>
+            
+            <!-- Audio Devices -->
+            <div class="product-category">
+                <div class="product-info">
+                    <h3>Audio Devices</h3>
+                    <p>Your ultimate companion for this month's eclipses.</p>
+                    <button class="btn-secondary">Discover More</button>
+                </div>
+                <div class="product-image">
+                    <video autoplay loop muted playsinline>
+                        <source src="../MP4/0328 (1)(2).mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Brand Banner -->
+    <section class="brand-banner">
+        <div class="container">
+            <div class="banner-content">
+                <img src="../img/Headers/Your_paragraph_text_1-removebg-preview.png" alt="ELECXA Logo" class="banner-logo">
+                <h2>Explore More Products on Elecxa</h2>
+                <p>Your ultimate companion for this month's eclipses.</p>
+                <div class="center-button">
+                    <button id="explore-more-btn" class="btn-primary">Explore More</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Partner Brands -->
+    <section class="partner-brands">
+        <div class="container">
+            <h2>Our Partner Brands</h2>
+            <div class="brands-container">
+                <img src="../img/Footers/Logo/image 10.jpg" alt="LG">
+                <img src="../img/Footers/Logo/image 11.jpg" alt="Asus">
+                <img src="../img/Footers/Logo/image 12.jpg" alt="Lenovo">
+                <img src="../img/Footers/Logo/image 13.jpg" alt="Acer">
+                <img src="../img/Footers/Logo/image 14.jpg" alt="Samsung">
+                <img src="../img/Footers/Logo/image 8.jpg" alt="Dell">
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-columns">
+                <div class="footer-column">
+                    <h3>Shop</h3>
+                    <ul>
+                        <li><a href="#">How to Order</a></li>
+                        <li><a href="#">Shipping and Returns</a></li>
+                        <li><a href="#">Track My Order</a></li>
+                        <li><a href="#">My Account</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>About</h3>
+                    <ul>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Cookie Policy</a></li>
+                        <li><a href="#">Terms & Conditions</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Do You Need Help?</h3>
+                    <ul>
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">FAQs</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="payment-methods">
+                <h3>Payments Accepted</h3>
+                <div class="payment-icons">
+                    <img src="../img/Footers/image 1.jpg" alt="Visa">
+                    <img src="../img/Footers/image 2.jpg" alt="Mastercard">
+                    <img src="../img/Footers/image 4.jpg" alt="PayPal">
+                    <img src="../img/Footers/image 5.jpg" alt="American Express">
+                    <img src="../img/Footers/image 6.jpg" alt="Apple Pay">
+                    <img src="../img/Footers/image 7.jpg" alt="Google Pay">
+                </div>
+            </div>
+            
+            <div class="footer-divider"></div>
+            
+            <div class="footer-bottom">
+                <div class="footer-logo">
+                    <img src="../img/Headers/Your_paragraph_text_1-removebg-preview.png" alt="ELECXA">
+                </div>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-divider"></div>
+            
+            <div class="copyright">
+                <p>Elecxa © 2025 All Rights Reserved</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Swiper.js JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var swiper = new Swiper(".swiper-container", {
+                direction: "vertical",
+                slidesPerView: 1,
+                spaceBetween: 0,
+                loop: true,
+                speed: 800,
+                autoplay: {
+                    delay: 5000,
+                    disableOnInteraction: false,
+                }
+            });
+        });
+    </script>
+    <script src="../js/script.js"></script>
+</body>
+</html>

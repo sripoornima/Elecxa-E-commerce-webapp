@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="head(title)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${title} + ' - ELECXA'">ELECXA</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <link rel="stylesheet" th:href="@{/css/search.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+    <th:block th:replace="${extraStyles} ?: ~{}">
+        <!-- Additional styles will be inserted here -->
+    </th:block>
+</head>
+<body>
+    <!-- Header Section -->
+    <header th:fragment="header" class="header">
+        <div class="overlap-group">
+            <a th:href="@{/}"><img class="head-logo" th:src="@{/img/Headers/Your_paragraph_text_1-removebg-preview.png}" alt="ELECXA" /></a>
+            
+            <!-- Search Bar (Centered) -->
+            <div class="overlap" style="margin: 0 auto;">
+                <form class="search-container search-form">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" class="search-bar" placeholder="Search products, brands, or categories">
+                    <i class="fas fa-times search-clear"></i>
+                    <!-- Search Dropdown -->
+                    <div class="search-dropdown">
+                        <div class="search-dropdown-header">
+                            <h3>Search Results</h3>
+                            <i class="fas fa-times search-dropdown-close"></i>
+                        </div>
+                        <div class="search-section">
+                            <div class="search-section-title">Categories</div>
+                            <div class="search-categories">
+                                <div class="search-category">Mobile Phones</div>
+                                <div class="search-category">Laptops</div>
+                                <div class="search-category">Televisions</div>
+                                <div class="search-category">Audio Devices</div>
+                                <div class="search-category">Smart Home</div>
+                            </div>
+                        </div>
+                        <div class="search-section">
+                            <div class="search-section-title">Recent Searches</div>
+                            <ul class="search-suggestions-list recent-searches-list">
+                                <!-- Will be populated by JavaScript -->
+                            </ul>
+                        </div>
+                        <div class="search-section">
+                            <div class="search-section-title">Popular Products</div>
+                            <div class="search-popular-products">
+                                <!-- Will be populated by JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="icon-user">
+                <a th:href="@{/profile}"><i class="fas fa-user"></i></a>
+            </div>
+            <div class="icon-cart-alt">
+                <a th:href="@{/cart}">
+                <i class="fas fa-shopping-cart"></i>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main th:fragment="main">
+        <!-- Content will be inserted here -->
+        <th:block th:replace="${content}">
+        </th:block>
+    </main>
+
+    <!-- Footer Section -->
+    <footer th:fragment="footer">
+        <div class="container">
+            <div class="footer-columns">
+                <div class="footer-column">
+                    <h3>Shop</h3>
+                    <ul>
+                        <li><a th:href="@{/how-to-order}">How to Order</a></li>
+                        <li><a th:href="@{/shipping}">Shipping and Returns</a></li>
+                        <li><a th:href="@{/track-order}">Track My Order</a></li>
+                        <li><a th:href="@{/account}">My Account</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>About</h3>
+                    <ul>
+                        <li><a th:href="@{/privacy}">Privacy Policy</a></li>
+                        <li><a th:href="@{/cookies}">Cookie Policy</a></li>
+                        <li><a th:href="@{/terms}">Terms & Conditions</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Do You Need Help?</h3>
+                    <ul>
+                        <li><a th:href="@{/contact}">Contact Us</a></li>
+                        <li><a th:href="@{/faq}">FAQs</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="payment-methods">
+                <h3>Payments Accepted</h3>
+                <div class="payment-icons">
+                    <img th:src="@{/img/Footers/image 1.jpg}" alt="Visa">
+                    <img th:src="@{/img/Footers/image 2.jpg}" alt="Mastercard">
+                    <img th:src="@{/img/Footers/image 4.jpg}" alt="PayPal">
+                    <img th:src="@{/img/Footers/image 5.jpg}" alt="American Express">
+                    <img th:src="@{/img/Footers/image 6.jpg}" alt="Apple Pay">
+                    <img th:src="@{/img/Footers/image 7.jpg}" alt="Google Pay">
+                </div>
+            </div>
+            
+            <div class="footer-divider"></div>
+            
+            <div class="footer-bottom">
+                <div class="footer-logo">
+                    <img th:src="@{/img/Headers/Your_paragraph_text_1-removebg-preview.png}" alt="ELECXA">
+                </div>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-divider"></div>
+            
+            <div class="copyright">
+                <p>Elecxa © 2025 All Rights Reserved</p>
+            </div>
+        </div>
+    </footer>
+
+    <th:block th:fragment="scripts">
+        <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
+        <script th:src="@{/js/script.js}"></script>
+        <script th:src="@{/js/search.js}"></script>
+        <th:block th:replace="${extraScripts} ?: ~{}">
+            <!-- Additional scripts will be inserted here -->
+        </th:block>
+    </th:block>
+</body>
+</html> 

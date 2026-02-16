@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ELECXA - Products</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/products-page.css">
+    <link rel="stylesheet" href="../css/search.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header Section -->
+    <header class="header">
+        <div class="overlap-group">
+            <a th:href="@{/}"><img class="head-logo" src="../img/Headers/Your_paragraph_text_1-removebg-preview.png" alt="ELECXA" /></a>
+            
+            <div class="header-center">
+                <div class="search-container">
+                    <form class="search-form">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" class="search-bar" placeholder="Search by Categories, Products">
+                        <i class="fas fa-times search-clear"></i>
+                    </form>
+                    
+                    <!-- Search Dropdown -->
+                    <div class="search-dropdown">
+                        <div class="search-dropdown-header">
+                            <h3>What are you looking for?</h3>
+                            <span class="search-dropdown-close"><i class="fas fa-times"></i></span>
+                        </div>
+                        
+                        <!-- Categories Section -->
+                        <div class="search-section">
+                            <h4 class="search-section-title">Popular Categories</h4>
+                            <div class="search-categories">
+                                <div class="search-category">Mobile Phones</div>
+                                <div class="search-category">Laptops</div>
+                                <div class="search-category">Televisions</div>
+                                <div class="search-category">Audio Devices</div>
+                                <div class="search-category">Wearables</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Recent Searches Section -->
+                        <div class="search-section">
+                            <h4 class="search-section-title">Recent Searches</h4>
+                            <ul class="search-suggestions-list recent-searches-list">
+                                <li class="search-suggestion-item">
+                                    <div class="search-suggestion-icon">
+                                        <i class="fas fa-history"></i>
+                                    </div>
+                                    <div class="search-suggestion-text">samsung galaxy</div>
+                                </li>
+                                <li class="search-suggestion-item">
+                                    <div class="search-suggestion-icon">
+                                        <i class="fas fa-history"></i>
+                                    </div>
+                                    <div class="search-suggestion-text">wireless headphones</div>
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <!-- Popular Products Section -->
+                        <div class="search-section">
+                            <h4 class="search-section-title">Popular Products</h4>
+                            <div class="search-popular-products">
+                                <!-- Will be populated via JavaScript -->
+                            </div>
+                        </div>
+                        
+                        <!-- Search Results Container -->
+                        <div class="search-results-container">
+                            <!-- Will be filled with search results -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="header-right">
+                <div class="icon-user">
+                    <a href="profile-new.html">
+                        <i class="fas fa-circle-user"></i>
+                        <span>Account</span>
+                    </a>
+                </div>
+                <div class="icon-cart-alt">
+                    <a href="addcart-new.html">
+                        <i class="fas fa-bag-shopping"></i>
+                        <span>Cart</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <!-- Swiper -->
+        <div class="swiper-container">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide">
+                    <img src="../img/Hero-Section/image 16.png" alt="Galaxy S25 Ultra">
+                </div>
+                <div class="swiper-slide">
+                    <img src="../img/Hero-Section/image 17.png" alt="New MacBook Pro">
+                </div>
+                <div class="swiper-slide">
+                    <img src="../img/Hero-Section/image 18.png" alt="Wireless Headphones">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Breadcrumb Navigation -->
+    <div class="container breadcrumb-container">
+        <div class="breadcrumb">
+            <a th:href="@{/}">Home</a>
+            <span>></span>
+            <span>Mobile Phones</span>
+        </div>
+    </div>
+
+    <!-- Products Content -->
+    <div class="container">
+        <!-- Filter Categories -->
+        <div class="filter-categories">
+            <div class="category-dropdown">
+                <button class="dropdown-btn">Categories <i class="fas fa-chevron-down"></i></button>
+                <div class="dropdown-content" id="category-list">
+                    
+                    <div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> Loading...</div>
+                </div>
+            </div>
+            <div class="filter-wrapper">
+                <div class="filter-button" id="filter-btn">
+                    Filters <i class="fas fa-sliders"></i>
+                </div>
+                
+                <!-- Filter Modal -->
+                <div class="filter-modal" id="filter-modal">
+                    <div class="filter-modal-content">
+                        <div class="filter-header">
+                            <h3>Filters</h3>
+                            <span class="close-filter"><i class="fas fa-times"></i></span>
+                        </div>
+                        
+                        <div class="filter-section">
+                            <h4>Price Range</h4>
+                            <div class="price-range">
+                                <div class="price-slider">
+                                    <div class="price-track-container">
+                                        <div class="price-track" id="price-track"></div>
+                                    </div>
+                                    <div class="price-handle price-handle-min" id="price-handle-min">
+                                        <div class="price-bubble" id="price-bubble-min">₹20,000</div>
+                                    </div>
+                                    <div class="price-handle price-handle-max" id="price-handle-max">
+                                        <div class="price-bubble" id="price-bubble-max">₹80,000</div>
+                                    </div>
+                                </div>
+                                <div class="price-labels">
+                                    <div class="price-label">₹0</div>
+                                    <div class="price-label">₹100,000</div>
+                                </div>
+                                <div class="price-inputs">
+                                    <div>
+                                        <label for="price-min">Min Price</label>
+                                        <input type="number" id="price-min" value="20000" min="0" max="100000">
+                                    </div>
+                                    <div>
+                                        <label for="price-max">Max Price</label>
+                                        <input type="number" id="price-max" value="80000" min="0" max="100000">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="filter-section">
+                            <h4>Brand</h4>
+                            <div class="filter-options">
+                                <div class="filter-option">
+                                    <input type="checkbox" id="brand-samsung" value="Samsung">
+                                    <label for="brand-samsung">Samsung</label>
+                                </div>
+                                <div class="filter-option">
+                                    <input type="checkbox" id="brand-apple" value="Apple">
+                                    <label for="brand-apple">Apple</label>
+                                </div>
+                                <div class="filter-option">
+                                    <input type="checkbox" id="brand-xiaomi" value="Xiaomi">
+                                    <label for="brand-xiaomi">Xiaomi</label>
+                                </div>
+                                <div class="filter-option">
+                                    <input type="checkbox" id="brand-oneplus" value="OnePlus">
+                                    <label for="brand-oneplus">OnePlus</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="filter-section">
+                            <h4>Rating</h4>
+                            <div class="filter-options rating-options">
+                                <div class="filter-option">
+                                    <input type="radio" name="rating" id="rating-4" value="4">
+                                    <label for="rating-4">4★ & Above</label>
+                                </div>
+                                <div class="filter-option">
+                                    <input type="radio" name="rating" id="rating-3" value="3">
+                                    <label for="rating-3">3★ & Above</label>
+                                </div>
+                                <div class="filter-option">
+                                    <input type="radio" name="rating" id="rating-2" value="2">
+                                    <label for="rating-2">2★ & Above</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="filter-actions">
+                            <button class="filter-clear">Clear All</button>
+                            <button class="filter-apply">Apply Filters</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Products Grid -->
+        <div class="products-grid">
+            <!-- Product 1 -->
+            <a href="product-info.html">
+            <div class="product-card">
+                <div class="wishlist-icon">
+                    <img src="../img/Elements/heart.png" alt="Heart">
+                </div>
+                <div class="product-image">
+                    <img src="../img/Mobile Phones/image 19.jpg" alt="Product Image">
+                </div>
+                <h3>SAMSUNG Galaxy S24 Ultra 5G (12GB RAM, 256GB, Titanium Gray)</h3>
+                <div class="product-rating">
+                    <img src="../img/Elements/star.png" alt="Star">
+                    <span>5</span>
+                    <span>(120 Reviews)</span>
+                </div>
+                <div class="product-price">
+                    <span>₹70,999</span>
+                    <span>₹74,999</span>
+                </div>
+            </div>
+            </a>
+
+            <!-- Product 2 -->
+            <div class="product-card">
+                <div class="wishlist-icon">
+                    <img src="../img/Elements/heart.png" alt="Heart">
+                </div>
+                <div class="product-image">
+                    <img src="../img/Mobile Phones/image 19.jpg" alt="Product Image">
+                </div>
+                <h3>SAMSUNG Galaxy S24 Ultra 5G (12GB RAM, 256GB, Titanium Gray)</h3>
+                <div class="product-rating">
+                    <img src="../img/Elements/star.png" alt="Star">
+                    <span>5</span>
+                    <span>(120 Reviews)</span>
+                </div>
+                <div class="product-price">
+                    <span>₹70,999</span>
+                    <span>₹74,999</span>
+                </div>
+            </div>
+
+            <!-- Product 3 -->
+            <div class="product-card">
+                <div class="wishlist-icon">
+                    <img src="../img/Elements/heart.png" alt="Heart">
+                </div>
+                <div class="product-image">
+                    <img src="../img/Mobile Phones/image 19.jpg" alt="Product Image">
+                </div>
+                <h3>SAMSUNG Galaxy S24 Ultra 5G (12GB RAM, 256GB, Titanium Gray)</h3>
+                <div class="product-rating">
+                    <img src="../img/Elements/star.png" alt="Star">
+                    <span>5</span>
+                    <span>(120 Reviews)</span>
+                </div>
+                <div class="product-price">
+                    <span>₹70,999</span>
+                    <span>₹74,999</span>
+                </div>
+            </div>
+
+            <!-- Product 4 -->
+            <div class="product-card">
+                <div class="wishlist-icon">
+                    <img src="../img/Elements/heart.png" alt="Heart">
+                </div>
+                <div class="product-image">
+                    <img src="../img/Mobile Phones/image 19.jpg" alt="Product Image">
+                </div>
+                <h3>SAMSUNG Galaxy S24 Ultra 5G (12GB RAM, 256GB, Titanium Gray)</h3>
+                <div class="product-rating">
+                    <img src="../img/Elements/star.png" alt="Star">
+                    <span>5</span>
+                    <span>(120 Reviews)</span>
+                </div>
+                <div class="product-price">
+                    <span>₹70,999</span>
+                    <span>₹74,999</span>
+                </div>
+            </div>
+
+            <!-- Product 5 -->
+            <div class="product-card">
+                <div class="wishlist-icon">
+                    <img src="../img/Elements/heart.png" alt="Heart">
+                </div>
+                <div class="product-image">
+                    <img src="../img/Mobile Phones/image 19.jpg" alt="Product Image">
+                </div>
+                <h3>SAMSUNG Galaxy S24 Ultra 5G (12GB RAM, 256GB, Titanium Gray)</h3>
+                <div class="product-rating">
+                    <img src="../img/Elements/star.png" alt="Star">
+                    <span>5</span>
+                    <span>(120 Reviews)</span>
+                </div>
+                <div class="product-price">
+                    <span>₹70,999</span>
+                    <span>₹74,999</span>
+                </div>
+            </div>
+
+            <!-- Product 6 -->
+            <div class="product-card">
+                <div class="wishlist-icon">
+                    <img src="../img/Elements/heart.png" alt="Heart">
+                </div>
+                <div class="product-image">
+                    <img src="../img/Mobile Phones/image 19.jpg" alt="Product Image">
+                </div>
+                <h3>SAMSUNG Galaxy S24 Ultra 5G (12GB RAM, 256GB, Titanium Gray)</h3>
+                <div class="product-rating">
+                    <img src="../img/Elements/star.png" alt="Star">
+                    <span>5</span>
+                    <span>(120 Reviews)</span>
+                </div>
+                <div class="product-price">
+                    <span>₹70,999</span>
+                    <span>₹74,999</span>
+                </div>
+            </div>
+
+            <!-- Product 7 -->
+            <div class="product-card">
+                <div class="wishlist-icon">
+                    <img src="../img/Elements/heart.png" alt="Heart">
+                </div>
+                <div class="product-image">
+                    <img src="../img/Mobile Phones/image 19.jpg" alt="Product Image">
+                </div>
+                <h3>SAMSUNG Galaxy S24 Ultra 5G (12GB RAM, 256GB, Titanium Gray)</h3>
+                <div class="product-rating">
+                    <img src="../img/Elements/star.png" alt="Star">
+                    <span>5</span>
+                    <span>(120 Reviews)</span>
+                </div>
+                <div class="product-price">
+                    <span>₹70,999</span>
+                    <span>₹74,999</span>
+                </div>
+            </div>
+
+            <!-- Product 8 -->
+            <div class="product-card">
+                <div class="wishlist-icon">
+                    <img src="../img/Elements/heart.png" alt="Heart">
+                </div>
+                <div class="product-image">
+                    <img src="../img/Mobile Phones/image 19.jpg" alt="Product Image">
+                </div>
+                <h3>SAMSUNG Galaxy S24 Ultra 5G (12GB RAM, 256GB, Titanium Gray)</h3>
+                <div class="product-rating">
+                    <img src="../img/Elements/star.png" alt="Star">
+                    <span>5</span>
+                    <span>(120 Reviews)</span>
+                </div>
+                <div class="product-price">
+                    <span>₹70,999</span>
+                    <span>₹74,999</span>
+                </div>
+            </div>
+
+            <!-- Product 9 -->
+            <div class="product-card">
+                <div class="wishlist-icon">
+                    <img src="../img/Elements/heart.png" alt="Heart">
+                </div>
+                <div class="product-image">
+                    <img src="../img/Mobile Phones/image 19.jpg" alt="Product Image">
+                </div>
+                <h3>SAMSUNG Galaxy S24 Ultra 5G (12GB RAM, 256GB, Titanium Gray)</h3>
+                <div class="product-rating">
+                    <img src="../img/Elements/star.png" alt="Star">
+                    <span>5</span>
+                    <span>(120 Reviews)</span>
+                </div>
+                <div class="product-price">
+                    <span>₹70,999</span>
+                    <span>₹74,999</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-columns">
+                <div class="footer-column">
+                    <h3>Shop</h3>
+                    <ul>
+                        <li><a href="products-page.html">Products</a></li>
+                        <li><a href="#">Shipping and Returns</a></li>
+                        <li><a href="order-confirmation.html">Track My Order</a></li>
+                        <li><a href="profile-new.html">My Account</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>About</h3>
+                    <ul>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Cookie Policy</a></li>
+                        <li><a href="#">Terms & Conditions</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Do You Need Help?</h3>
+                    <ul>
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">FAQs</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="payment-methods">
+                <h3>Payments Accepted</h3>
+                <div class="payment-icons">
+                    <img src="../img/Footers/image 1.jpg" alt="Visa">
+                    <img src="../img/Footers/image 2.jpg" alt="Mastercard">
+                    <img src="../img/Footers/image 4.jpg" alt="PayPal">
+                    <img src="../img/Footers/image 5.jpg" alt="American Express">
+                    <img src="../img/Footers/image 6.jpg" alt="Apple Pay">
+                    <img src="../img/Footers/image 7.jpg" alt="Google Pay">
+                </div>
+            </div>
+            
+            <div class="footer-divider"></div>
+            
+            <div class="footer-bottom">
+                <div class="footer-logo">
+                    <img src="../img/Headers/Your_paragraph_text_1-removebg-preview.png" alt="ELECXA">
+                </div>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-divider"></div>
+            
+            <div class="copyright">
+                <p>Elecxa © 2025 All Rights Reserved</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Swiper.js JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var swiper = new Swiper(".swiper-container", {
+                direction: "vertical",
+                slidesPerView: 1,
+                spaceBetween: 0,
+                loop: true,
+                speed: 800,
+                autoplay: {
+                    delay: 5000,
+                    disableOnInteraction: false,
+                },
+                pagination: {
+                    el: ".swiper-pagination",
+                    clickable: true,
+                },
+                navigation: {
+                    nextEl: ".swiper-button-next",
+                    prevEl: ".swiper-button-prev",
+                },
+            });
+        });
+    </script>
+    
+    <!-- Categories Dropdown JavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize categories dropdown
+            initCategoriesDropdown();
+        });
+
+        // Function to initialize the categories dropdown
+        function initCategoriesDropdown() {
+            console.log('Initializing categories dropdown...');
+            fetchAndPopulateCategories();
+        }
+
+        // Function to fetch categories from backend and populate dropdown
+        function fetchAndPopulateCategories() {
+            const categoryList = document.getElementById('category-list');
+            if (!categoryList) {
+                console.error('Category list element not found');
+                return;
+            }
+            
+            console.log('Fetching categories...');
+
+            // Sample data - replace with actual API call to your backend
+            // Example: 
+            // fetch('/api/categories')
+            //   .then(response => response.json())
+            //   .then(data => displayCategories(data))
+            //   .catch(error => {
+            //     console.error('Error fetching categories:', error);
+            //     displayFallbackCategories();
+            //   });
+
+            // Simulating API response delay
+            setTimeout(() => {
+                // This is sample data - replace with actual API response
+                const sampleCategories = [
+                    { id: 1, name: 'Mobile Phones' },
+                    { id: 2, name: 'Laptops & Computers' },
+                    { id: 3, name: 'Audio & Headphones' }
+                ];
+                console.log('Categories loaded:', sampleCategories);
+                displayCategories(sampleCategories);
+            }, 100);
+        }
+
+        function displayCategories(categories) {
+            const categoryList = document.getElementById('category-list');
+            if (!categoryList) {
+                console.error('Category list element not found in displayCategories');
+                return;
+            }
+
+            console.log('Displaying categories...');
+
+            // Clear loading spinner
+            categoryList.innerHTML = '';
+
+            // Add categories to dropdown
+            categories.forEach(category => {
+                const link = document.createElement('a');
+                link.href = `#category-${category.id}`;
+                link.textContent = category.name;
+                link.dataset.categoryId = category.id;
+                
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    // Handle category selection - you can add filtering logic here
+                    console.log(`Selected category: ${category.name}`);
+                    
+                    // Example: Update breadcrumb
+                    const breadcrumbCategory = document.querySelector('.breadcrumb span:last-child');
+                    if (breadcrumbCategory) {
+                        breadcrumbCategory.textContent = category.name;
+                    }
+                });
+                
+                categoryList.appendChild(link);
+            });
+            
+            console.log('Categories displayed successfully');
+        }
+
+        function displayFallbackCategories() {
+            const categoryList = document.getElementById('category-list');
+            if (!categoryList) return;
+            
+            categoryList.innerHTML = '';
+            
+            // Fallback categories if API fails
+            const fallbackCategories = [
+                { id: 1, name: 'Mobile Phones' },
+                { id: 2, name: 'Laptops & Computers' },
+                { id: 3, name: 'Audio & Headphones' }
+            ];
+            
+            displayCategories(fallbackCategories);
+        }
+    </script>
+    
+    <!-- Filters Modal JavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize filter functionality
+            initFilters();
+        });
+        
+        function initFilters() {
+            const filterBtn = document.getElementById('filter-btn');
+            const filterModal = document.getElementById('filter-modal');
+            const closeFilter = document.querySelector('.close-filter');
+            const applyFilter = document.querySelector('.filter-apply');
+            const clearFilter = document.querySelector('.filter-clear');
+            
+            // Price range elements
+            const priceHandleMin = document.getElementById('price-handle-min');
+            const priceHandleMax = document.getElementById('price-handle-max');
+            const priceBubbleMin = document.getElementById('price-bubble-min');
+            const priceBubbleMax = document.getElementById('price-bubble-max');
+            const priceTrack = document.getElementById('price-track');
+            const priceMinInput = document.getElementById('price-min');
+            const priceMaxInput = document.getElementById('price-max');
+            
+            const priceMin = 0;
+            const priceMax = 100000;
+            
+            // Open filter modal
+            filterBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                filterModal.classList.toggle('active');
+            });
+            
+            // Close filter modal
+            closeFilter.addEventListener('click', function(e) {
+                e.stopPropagation();
+                filterModal.classList.remove('active');
+            });
+            
+            // Close modal when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!filterModal.contains(e.target) && e.target !== filterBtn) {
+                    filterModal.classList.remove('active');
+                }
+            });
+            
+            // Prevent clicks inside the modal from closing it
+            filterModal.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+            
+            // Apply filters
+            applyFilter.addEventListener('click', function() {
+                applyFilters();
+                filterModal.classList.remove('active');
+            });
+            
+            // Clear all filters
+            clearFilter.addEventListener('click', function() {
+                clearAllFilters();
+            });
+            
+            // Initialize price range
+            updatePriceRange();
+            
+            // Make price handles draggable
+            initDraggable(priceHandleMin, updateMinPrice);
+            initDraggable(priceHandleMax, updateMaxPrice);
+            
+            // Update price inputs on change
+            priceMinInput.addEventListener('change', function() {
+                let value = parseInt(priceMinInput.value);
+                
+                // Validate input
+                if (isNaN(value)) value = 0;
+                if (value < 0) value = 0;
+                if (value > parseInt(priceMaxInput.value)) {
+                    value = parseInt(priceMaxInput.value);
+                }
+                
+                priceMinInput.value = value;
+                updatePriceHandles();
+            });
+            
+            priceMaxInput.addEventListener('change', function() {
+                let value = parseInt(priceMaxInput.value);
+                
+                // Validate input
+                if (isNaN(value)) value = priceMax;
+                if (value > priceMax) value = priceMax;
+                if (value < parseInt(priceMinInput.value)) {
+                    value = parseInt(priceMinInput.value);
+                }
+                
+                priceMaxInput.value = value;
+                updatePriceHandles();
+            });
+            
+            // Make price handle draggable
+            function initDraggable(element, updateFn) {
+                let isDragging = false;
+                const slider = document.querySelector('.price-slider');
+                const sliderRect = slider.getBoundingClientRect();
+                
+                element.addEventListener('mousedown', function(e) {
+                    isDragging = true;
+                    document.addEventListener('mousemove', onMouseMove);
+                    document.addEventListener('mouseup', onMouseUp);
+                    e.preventDefault();
+                });
+                
+                function onMouseMove(e) {
+                    if (!isDragging) return;
+                    const sliderRect = slider.getBoundingClientRect();
+                    let x = e.clientX - sliderRect.left;
+                    
+                    // Constrain to slider bounds
+                    if (x < 0) x = 0;
+                    if (x > sliderRect.width) x = sliderRect.width;
+                    
+                    // Convert to percentage
+                    const percentage = (x / sliderRect.width) * 100;
+                    
+                    // Update position
+                    updateFn(percentage);
+                    e.preventDefault();
+                }
+                
+                function onMouseUp() {
+                    isDragging = false;
+                    document.removeEventListener('mousemove', onMouseMove);
+                    document.removeEventListener('mouseup', onMouseUp);
+                }
+                
+                // Touch support
+                element.addEventListener('touchstart', function(e) {
+                    isDragging = true;
+                    document.addEventListener('touchmove', onTouchMove);
+                    document.addEventListener('touchend', onTouchEnd);
+                    e.preventDefault();
+                });
+                
+                function onTouchMove(e) {
+                    if (!isDragging || !e.touches[0]) return;
+                    const sliderRect = slider.getBoundingClientRect();
+                    let x = e.touches[0].clientX - sliderRect.left;
+                    
+                    // Constrain to slider bounds
+                    if (x < 0) x = 0;
+                    if (x > sliderRect.width) x = sliderRect.width;
+                    
+                    // Convert to percentage
+                    const percentage = (x / sliderRect.width) * 100;
+                    
+                    // Update position
+                    updateFn(percentage);
+                    e.preventDefault();
+                }
+                
+                function onTouchEnd() {
+                    isDragging = false;
+                    document.removeEventListener('touchmove', onTouchMove);
+                    document.removeEventListener('touchend', onTouchEnd);
+                }
+            }
+            
+            // Update minimum price handle position
+            function updateMinPrice(percentage) {
+                // Get max handle position
+                const maxPosition = parseFloat(priceHandleMax.style.left || '100');
+                
+                // Ensure min doesn't exceed max
+                if (percentage > maxPosition) {
+                    percentage = maxPosition;
+                }
+                
+                // Update position
+                priceHandleMin.style.left = percentage + '%';
+                
+                // Calculate price value
+                const price = Math.round((percentage / 100) * priceMax);
+                
+                // Update input and bubble
+                priceMinInput.value = price;
+                priceBubbleMin.textContent = formatPrice(price);
+                
+                // Update track
+                updatePriceTrack();
+            }
+            
+            // Update maximum price handle position
+            function updateMaxPrice(percentage) {
+                // Get min handle position
+                const minPosition = parseFloat(priceHandleMin.style.left || '0');
+                
+                // Ensure max doesn't go below min
+                if (percentage < minPosition) {
+                    percentage = minPosition;
+                }
+                
+                // Update position
+                priceHandleMax.style.left = percentage + '%';
+                
+                // Calculate price value
+                const price = Math.round((percentage / 100) * priceMax);
+                
+                // Update input and bubble
+                priceMaxInput.value = price;
+                priceBubbleMax.textContent = formatPrice(price);
+                
+                // Update track
+                updatePriceTrack();
+            }
+            
+            // Update price track width
+            function updatePriceTrack() {
+                const minPos = parseFloat(priceHandleMin.style.left || '0');
+                const maxPos = parseFloat(priceHandleMax.style.left || '100');
+                
+                priceTrack.style.left = minPos + '%';
+                priceTrack.style.width = (maxPos - minPos) + '%';
+            }
+            
+            // Update price handles from input values
+            function updatePriceHandles() {
+                const minValue = parseInt(priceMinInput.value);
+                const maxValue = parseInt(priceMaxInput.value);
+                
+                // Convert to percentages
+                const minPercentage = (minValue / priceMax) * 100;
+                const maxPercentage = (maxValue / priceMax) * 100;
+                
+                // Update positions
+                priceHandleMin.style.left = minPercentage + '%';
+                priceHandleMax.style.left = maxPercentage + '%';
+                
+                // Update bubbles
+                priceBubbleMin.textContent = formatPrice(minValue);
+                priceBubbleMax.textContent = formatPrice(maxValue);
+                
+                // Update track
+                updatePriceTrack();
+            }
+            
+            // Format price with currency symbol and thousand separators
+            function formatPrice(price) {
+                return '₹' + price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+            }
+            
+            // Initialize price range
+            function updatePriceRange() {
+                // Set initial handle positions
+                const minValue = parseInt(priceMinInput.value);
+                const maxValue = parseInt(priceMaxInput.value);
+                
+                const minPercentage = (minValue / priceMax) * 100;
+                const maxPercentage = (maxValue / priceMax) * 100;
+                
+                priceHandleMin.style.left = minPercentage + '%';
+                priceHandleMax.style.left = maxPercentage + '%';
+                
+                // Update bubbles
+                priceBubbleMin.textContent = formatPrice(minValue);
+                priceBubbleMax.textContent = formatPrice(maxValue);
+                
+                // Update track
+                updatePriceTrack();
+            }
+            
+            // Apply all filters
+            function applyFilters() {
+                // Get price range
+                const minPrice = parseInt(priceMinInput.value);
+                const maxPrice = parseInt(priceMaxInput.value);
+                
+                // Get selected brands
+                const selectedBrands = Array.from(document.querySelectorAll('.filter-options input[type="checkbox"]:checked'))
+                    .map(input => input.value);
+                
+                // Get selected rating
+                const selectedRating = document.querySelector('.rating-options input[type="radio"]:checked')?.value;
+                
+                // Create a filter object
+                const filters = {
+                    priceRange: { min: minPrice, max: maxPrice },
+                    brands: selectedBrands,
+                    rating: selectedRating
+                };
+                
+                console.log('Applied filters:', filters);
+                
+                // Here you would normally filter products based on the filters
+                // This is just a placeholder for actual implementation
+                filterProducts(filters);
+            }
+            
+            // Clear all filters
+            function clearAllFilters() {
+                // Reset price inputs
+                priceMinInput.value = 0;
+                priceMaxInput.value = priceMax;
+                updatePriceHandles();
+                
+                // Uncheck all checkboxes
+                document.querySelectorAll('.filter-options input[type="checkbox"]').forEach(input => {
+                    input.checked = false;
+                });
+                
+                // Uncheck all radio buttons
+                document.querySelectorAll('.rating-options input[type="radio"]').forEach(input => {
+                    input.checked = false;
+                });
+                
+                console.log('All filters cleared');
+            }
+            
+            // Filter products based on selected filters
+            function filterProducts(filters) {
+               document.querySelector('.products-grid').classList.add('filtering');
+                
+                // Example of how you might update the UI after filtering
+                setTimeout(() => {
+                    document.querySelector('.products-grid').classList.remove('filtering');
+                    // In a real implementation, you would update the product list here
+                }, 500);
+            }
+        }
+    </script>
+    
+    <script src="../js/script.js"></script>
+    <script src="../js/search.js"></script>
+    <script src="../js/header-template.js"></script>
+</body>
+</html>

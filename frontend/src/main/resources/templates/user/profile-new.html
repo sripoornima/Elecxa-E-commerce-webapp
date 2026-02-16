@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ELECXA - My Profile</title>
+<link rel="stylesheet" href="../css/styles.css">
+<link rel="stylesheet" href="../css/profile.css">
+<link rel="stylesheet" href="../css/confirmation.css">
+
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link
+	href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600&display=swap"
+	rel="stylesheet">
+<style>
+.stepper {
+	display: flex;
+	justify-content: space-between;
+	position: relative;
+	margin: 40px auto;
+	max-width: 800px;
+}
+
+.step {
+	text-align: center;
+	position: relative;
+	flex: 1;
+}
+
+.step .circle {
+	width: 30px;
+	height: 30px;
+	line-height: 30px;
+	border-radius: 50%;
+	background-color: #ccc;
+	margin: auto;
+	color: white;
+	z-index: 2;
+	position: relative;
+}
+
+.step.completed .circle {
+	background-color: green;
+}
+
+.step .label {
+	margin-top: 8px;
+}
+
+.step:not(:last-child)::after {
+	content: '';
+	position: absolute;
+	top: 15px;
+	left: 50%;
+	height: 4px;
+	width: 100%;
+	background-color: #ccc;
+	z-index: 1;
+}
+
+.step.completed:not(:last-child)::after {
+	background-color: green;
+}
+
+.modal button{
+    margin-left: 600px;
+}
+.modal {
+	padding-top: 10px; 
+	display : none;
+	position: fixed;
+	z-index: 1000;
+	left: 90px;
+	top: 90px;
+	width: 90%;
+	height: 50%;
+	background-color: rgba(0, 0, 0, 0.5);
+	backdrop-filter: blur(5px);
+	display: none;
+}
+</style>
+</head>
+<body>
+	<!-- Header Section -->
+	<header class="header">
+		<div class="overlap-group">
+			<a th:href="@{/}"><img class="head-logo"
+				src="../img/Headers/Your_paragraph_text_1-removebg-preview.png"
+				alt="ELECXA" /></a>
+
+			<div class="header-center">
+				<div class="div">
+					<div class="menu">
+						<i class="fas fa-bars"></i>
+					</div>
+					<div class="text-wrapper-2">Menu</div>
+				</div>
+				<div class="overlap">
+					<div class="search-normal">
+						<i class="fas fa-search"></i>
+					</div>
+					<div class="text-wrapper">Search by Categories, Products</div>
+				</div>
+			</div>
+
+			<div class="header-right">
+				<div class="icon-user">
+					<a id="profileLink"> <i class="fas fa-user-circle"></i> <span>Account</span>
+					</a>
+				</div>
+				<div class="icon-cart-alt">
+					<a id="cartLink"> <i class="fas fa-shopping-basket"></i> <span>Cart</span>
+					</a>
+				</div>
+			</div>
+		</div>
+	</header>
+
+	<div id="trackOrderModal" class="modal">
+		<h2 style="text-align: center; color:white">Order Tracking</h2>
+		<div class="stepper">
+
+			<!-- Define all steps -->
+			<div class="step" th:classappend="${2 >= 0} ? 'completed'">
+				<div class="circle">1</div>
+				<div class="label">Order Placed</div>
+			</div>
+
+			<div class="step" th:classappend="${2 >= 1} ? 'completed'">
+				<div class="circle">2</div>
+				<div class="label">Packed</div>
+			</div>
+
+			<div class="step" th:classappend="${2 >= 2} ? 'completed'">
+				<div class="circle">3</div>
+				<div class="label">Shipped</div>
+			</div>
+
+			<div class="step" th:classappend="${2 >= 3} ? 'completed'">
+				<div class="circle">4</div>
+				<div class="label">Out for Delivery</div>
+			</div>
+
+			<div class="step" th:classappend="${2>= 4} ? 'completed'">
+				<div class="circle">5</div>
+				<div class="label">Delivered</div>
+			</div>
+
+
+		</div>
+
+		<button
+			class="cancel-order-btn" onclick="closeModal()">
+			<i class="fas fa-times"></i> Close
+		</button>
+	</div>
+
+	<!-- Profile Content -->
+	<div class="container">
+		<a th:href="@{/}" class="back-button">Back to Home</a>
+
+		<!-- Profile Tabs -->
+		<div class="profile-tabs">
+			<div class="tab active"
+				th:classappend="${activeTab == 'profile' ? 'active' : ''}">Profile</div>
+			<div class="tab"
+				th:classappend="${activeTab == 'wishlist' ? 'active' : ''}">Wishlist</div>
+			<div class="tab"
+				th:classappend="${activeTab == 'orders' ? 'active' : ''}">My
+				Orders</div>
+		</div>
+
+		<!-- Profile Form -->
+		<div class="profile-form-container"
+			th:style="${activeTab == 'orders' ? 'display: none;' : 'display: block;'}">
+			<form th:action="@{/profile/update}" th:object="${userProfile}"
+				method="post">
+				<input type="hidden" name="userId" th:value="${userProfile.userId}" />
+				<div class="form-section">
+					<h3 class="section-title">Your Details</h3>
+					<div class="form-row two-column">
+
+						<div class="form-field">
+							<input type="text" id="firstname" name="firstName"
+								class="input-field" placeholder=" "
+								th:value="${(userProfile.firstName)}"> <label
+								for="firstname" class="required">First Name</label> <span
+								class="error-message" th:if="${#fields.hasErrors('firstName')}"
+								th:errors="*{firstName}"></span>
+						</div>
+
+						<div class="form-field">
+							<input type="text" id="lastname" name="lastName"
+								class="input-field" placeholder=" "
+								th:value="${(userProfile.lastName == null ? '' : userProfile.lastName)}">
+							<label for="lastname" class="required">Last Name</label> <span
+								class="error-message" th:if="${#fields.hasErrors('lastName')}"
+								th:errors="*{lastName}"></span>
+						</div>
+
+					</div>
+
+					<div class="form-row two-column">
+						<div class="form-field">
+							<input type="email" id="email" name="email" class="input-field"
+								placeholder=" "
+								th:value="${(userProfile.email == null ? '' : userProfile.email)}">
+							<label for="email" class="required">Email</label> <span
+								class="error-message" th:if="${#fields.hasErrors('email')}"
+								th:errors="*{email}"></span>
+						</div>
+						<div class="form-field">
+							<input type="tel" id="phoneNumber" name="phoneNumber"
+								class="input-field" placeholder=" "
+								th:value="${(userProfile.phoneNumber == null ? '' : userProfile.phoneNumber)}">
+							<label for="phoneNumber" class="required">Phone</label> <span
+								class="error-message"
+								th:if="${#fields.hasErrors('phoneNumber')}"
+								th:errors="*{phoneNumber}"></span>
+						</div>
+					</div>
+				</div>
+
+				<div th:object="${address}" class="form-section">
+					<h3 class="section-title">Shipping Address</h3>
+					<div class="form-row">
+						<div class="form-field">
+							<input type="text" id="doorNoStreetName" name="doorNoStreetName"
+								class="input-field" placeholder=" "
+								th:value="${(address.doorNoStreetName == null ? '' :address.doorNoStreetName)}">
+							<label for="doorNoStreetName" class="required">Address</label> <span
+								class="error-message"
+								th:if="${#fields.hasErrors('doorNoStreetName')}"
+								th:errors="*{doorNoStreetName}"></span>
+						</div>
+					</div>
+
+					<div class="form-row">
+						<div class="form-field">
+							<input type="text" id="landmark" name="landmark"
+								class="input-field" placeholder=" "
+								th:value="${(address.landmark == null ? '' :address.landmark)}">
+							<label for="landmark">Landmark</label>
+						</div>
+					</div>
+
+					<div class="form-row three-column">
+						<div class="form-field">
+							<input type="text" id="pincode" name="pincode"
+								class="input-field" placeholder=" "
+								th:value="${(address.pincode == null ? '' :address.pincode)}">
+							<label for="pincode" class="required">Pincode</label> <span
+								class="error-message" th:if="${#fields.hasErrors('pincode')}"
+								th:errors="*{pincode}"></span>
+						</div>
+
+						<div class="form-field">
+							<input type="text" id="city" name="city" class="input-field"
+								placeholder=" "
+								th:value="${(address.city == null ? '' :address.city)}">
+							<label for="city" class="required">City</label> <span
+								class="error-message" th:if="${#fields.hasErrors('city')}"
+								th:errors="*{city}"></span>
+						</div>
+
+						<div class="form-field">
+							<input type="text" id="state" name="state" class="input-field"
+								placeholder=" "
+								th:value="${(address.state == null ? '' :address.state)}">
+							<label for="state" class="required">State</label> <span
+								class="error-message" th:if="${#fields.hasErrors('state')}"
+								th:errors="*{state}"></span>
+						</div>
+					</div>
+				</div>
+
+				<div class="edit-button-container">
+					<a th:href="@{/logout}" class="sign-out-button"> <i
+						class="fas fa-sign-out-alt"></i> Sign Out
+					</a>
+
+					<button type="submit" class="edit-button">Save Changes</button>
+				</div>
+			</form>
+		</div>
+
+		<div class="wishlist-container">
+
+			<div class="no-orders">
+				<i class="fas fa-shopping-bag"></i>
+				<h3>No Wishlist</h3>
+				<p>Start shopping to see your Wishlist here</p>
+				<a th:href="@{/}" class="shop-now-btn">Shop Now</a>
+			</div>
+
+		</div>
+
+		<div class="orders-container"
+			th:style="${activeTab == 'orders' ? 'display: block;' : 'display: none;'}">
+			<div class="orders-header">
+				<div class="orders-title">
+					<h2>My Orders</h2>
+					<p class="orders-subtitle"
+						th:text="${ordersCount} + ' orders found'">3 orders found</p>
+				</div>
+				<div class="orders-filter">
+					<select class="filter-select" id="orderStatusFilter">
+						<option value="all">All Orders</option>
+						<option value="PLACED">Placed</option>
+						<option value="DELIVERED">Delivered</option>
+						<option value="CANCELLED">Cancelled</option>
+					</select>
+				</div>
+			</div>
+
+			<!-- Orders List -->
+			<div class="orders-list">
+				<!-- Example Orders with Thymeleaf -->
+				<div class="order-card" th:each="order : ${orders}"
+					th:data-status="${order.orderStatus}">
+					<div class="order-header">
+						<div class="order-info">
+							<span class="order-number" th:text="${'Order #' + order.orderId}">Order
+								#ELX-2024-001</span> <span class="order-date"
+								th:text="${#temporals.format(order.orderedDate, 'MMMM dd, yyyy')}">March
+								15, 2024</span>
+						</div>
+						<div class="order-status" th:classappend="${order.orderStatus}"
+							th:text="${order.orderStatus}">Processing</div>
+					</div>
+
+					<div class="order-items">
+						<div class="order-item">
+							<img th:src="${order.product.imageUrl}"
+								th:alt="${order.product.name}">
+							<div class="item-details">
+								<h4 th:text="${order.product.name}">iPhone 15 Pro Max</h4>
+								<p th:text="${order.product.brand}">Natural Titanium, 256GB</p>
+								<span class="item-price"
+									th:text="${'₹' + #numbers.formatDecimal(order.product.price, 1, 'COMMA', 2, 'POINT')}">₹1,59,900</span>
+							</div>
+						</div>
+					</div>
+
+					<div class="order-footer">
+						<div class="order-total">
+							<span>Total Amount:</span> <span class="total-amount"
+								th:text="${'₹' + #numbers.formatDecimal(order.totalAmount, 1, 'COMMA', 2, 'POINT')}">₹1,59,900</span>
+						</div>
+						<div class="order-actions">
+							<button
+								th:if="${order.orderStatus == 'PLACED' || order.orderStatus == 'shipped'}"
+								class="track-order-btn"
+								th:onclick="'trackOrder(\'' + ${order.orderId} + '\')'">
+								<i class="fas fa-truck"></i> Track Order
+							</button>
+							<button th:if="${order.orderStatus == 'PLACED'}"
+								class="view-details-btn"
+								th:onclick="'viewOrderDetails(\'' + ${order.product.productId} + '\')'">
+								<i class="fas fa-eye"></i> View Details
+							</button>
+							<button th:if="${order.orderStatus == 'PLACED'}"
+								class="cancel-order-btn"
+								th:onclick="'cancelOrder(\'' + ${order.orderId} + '\')'">
+								<i class="fas fa-times"></i> Cancel Order
+							</button>
+						</div>
+
+
+					</div>
+				</div>
+
+
+
+				<!-- No Orders Message -->
+				<div class="no-orders" th:if="${#lists.isEmpty(orders)}">
+					<i class="fas fa-shopping-bag"></i>
+					<h3>No Orders Yet</h3>
+					<p>Start shopping to see your orders here</p>
+					<a th:href="@{/}" class="shop-now-btn">Shop Now</a>
+				</div>
+			</div>
+
+		</div>
+
+
+
+	</div>
+
+
+	<footer>
+		<div class="container">
+			<div class="footer-columns">
+				<div class="footer-column">
+					<h3>Shop</h3>
+					<ul>
+						<li><a href="products-page.html">Products</a></li>
+						<li><a href="#">Shipping and Returns</a></li>
+						<li><a href="order-confirmation.html">Track My Order</a></li>
+						<li><a href="profile-new.html">My Account</a></li>
+					</ul>
+				</div>
+				<div class="footer-column">
+					<h3>About</h3>
+					<ul>
+						<li><a href="#">Privacy Policy</a></li>
+						<li><a href="#">Cookie Policy</a></li>
+						<li><a href="#">Terms & Conditions</a></li>
+					</ul>
+				</div>
+				<div class="footer-column">
+					<h3>Do You Need Help?</h3>
+					<ul>
+						<li><a href="#">Contact Us</a></li>
+						<li><a href="#">FAQs</a></li>
+					</ul>
+				</div>
+			</div>
+
+			<div class="payment-methods">
+				<h3>Payments Accepted</h3>
+				<div class="payment-icons">
+					<img src="../img/Footers/image 1.jpg" alt="Visa"> <img
+						src="../img/Footers/image 2.jpg" alt="Mastercard"> <img
+						src="../img/Footers/image 4.jpg" alt="PayPal"> <img
+						src="../img/Footers/image 5.jpg" alt="American Express"> <img
+						src="../img/Footers/image 6.jpg" alt="Apple Pay"> <img
+						src="../img/Footers/image 7.jpg" alt="Google Pay">
+				</div>
+			</div>
+
+			<div class="footer-divider"></div>
+
+			<div class="footer-bottom">
+				<div class="footer-logo">
+					<img
+						src="../img/Headers/Your_paragraph_text_1-removebg-preview.png"
+						alt="ELECXA">
+				</div>
+				<div class="social-icons">
+					<a href="#"><i class="fab fa-facebook-f"></i></a> <a href="#"><i
+						class="fab fa-twitter"></i></a> <a href="#"><i
+						class="fab fa-instagram"></i></a> <a href="#"><i
+						class="fab fa-youtube"></i></a>
+				</div>
+			</div>
+
+			<div class="footer-divider"></div>
+
+			<div class="copyright">
+				<p>Elecxa © 2025 All Rights Reserved</p>
+			</div>
+		</div>
+	</footer>
+	<script th:inline="javascript">
+		document
+				.addEventListener(
+						'DOMContentLoaded',
+						function() {
+
+							const userId = sessionStorage.getItem('userId');
+							if (userId) {
+								document.getElementById("profileLink").href = "/profile?id="
+										+ userId;
+								document.getElementById("cartLink").href = "/cart?id="
+										+ userId;
+
+							}
+
+						});
+	</script>
+	<script src="../js/script.js"></script>
+	<script src="../js/profile.js"></script>
+	<script src="../js/confirmation.js"></script>
+</body>
+</html>

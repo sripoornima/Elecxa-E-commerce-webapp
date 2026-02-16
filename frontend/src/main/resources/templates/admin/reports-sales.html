@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(~{::title}, ~{::section})}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales Reports - Admin Panel</title>
+</head>
+<body>
+    <section>
+        <!-- Page Title -->
+        <div class="d-sm-flex align-items-center justify-content-between mb-4">
+            <h1 class="h3 mb-0 text-gray-800">Sales Reports</h1>
+            <div class="btn-group">
+                <button type="button" class="btn btn-sm btn-primary dropdown-toggle shadow-sm" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fas fa-download fa-sm text-white-50"></i> Export Report
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li><a class="dropdown-item" href="#">Export as PDF</a></li>
+                    <li><a class="dropdown-item" href="#">Export as Excel</a></li>
+                    <li><a class="dropdown-item" href="#">Export as CSV</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Report Type Selection -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Sales Report Options</h6>
+            </div>
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-md-6 mb-3 mb-md-0">
+                        <label for="timePeriod" class="form-label">Time Period</label>
+                        <select class="form-select" id="timePeriod">
+                            <option value="weekly" th:selected="${reportType == 'weekly'}">Weekly</option>
+                            <option value="monthly" th:selected="${reportType == 'monthly'}">Monthly</option>
+                            <option value="yearly" th:selected="${reportType == 'yearly'}">Yearly</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6 d-flex align-items-end">
+                        <button id="generateReport" class="btn btn-primary w-100">Update Report</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sales Report -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Sales Overview</h6>
+                <div class="dropdown no-arrow">
+                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
+                        <div class="dropdown-header">View Options:</div>
+                        <a class="dropdown-item" href="/reports/sales?period=weekly">Weekly</a>
+                        <a class="dropdown-item" href="/reports/sales?period=monthly">Monthly</a>
+                        <a class="dropdown-item" href="/reports/sales?period=yearly">Yearly</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#">Export Data</a>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="chart-container" style="position: relative; height:50vh;">
+                    <canvas id="salesChart" th:data-chart="${#strings.replace(#objects.nullSafe(#strings.escapeJavaScript(#objects.nullSafe(#jsonUtils.toJson(salesData), '{}')), '{}'), '&quot;', '\\&quot;')}"></canvas>
+                </div>
+                <div class="mt-4">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>Period</th>
+                                    <th>Orders</th>
+                                    <th>Revenue</th>
+                                    <th>Growth</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="data, stat : ${salesData}" th:if="${stat.index > 0}">
+                                    <td th:text="${data[0]}">Period</td>
+                                    <td th:text="${data[1]}">Orders</td>
+                                    <td th:text="${#numbers.formatCurrency(data[2])}">Revenue</td>
+                                    <td>
+                                        <span th:if="${stat.index > 1}" 
+                                              th:with="growth=${(data[2] - salesData[stat.index-1][2]) / salesData[stat.index-1][2] * 100}"
+                                              th:class="${growth >= 0 ? 'text-success' : 'text-danger'}"
+                                              th:text="${growth >= 0 ? '+' : ''} + ${#numbers.formatDecimal(growth, 1, 1)} + '%'">
+                                            +5.2%
+                                        </span>
+                                        <span th:if="${stat.index == 1}">-</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Page specific scripts -->
+    <th:block th:fragment="scripts">
+        <script th:inline="javascript">
+            document.addEventListener('DOMContentLoaded', function() {
+                // Get report data from Thymeleaf
+                const salesData = /*[[${salesData}]]*/ [];
+                
+                // Initialize chart
+                initializeSalesChart(salesData);
+                
+                // Handle time period change
+                const timePeriod = document.getElementById('timePeriod');
+                const generateBtn = document.getElementById('generateReport');
+                
+                // Handle generate report button
+                generateBtn.addEventListener('click', function() {
+                    const period = timePeriod.value;
+                    window.location.href = `/reports/sales?period=${period}`;
+                });
+            });
+            
+            function initializeSalesChart(data) {
+                if (!data || data.length <= 1) return;
+                
+                const ctx = document.getElementById('salesChart').getContext('2d');
+                
+                // Extract labels and data
+                const labels = [];
+                const salesData = [];
+                const revenueData = [];
+                
+                // Skip header row
+                for (let i = 1; i < data.length; i++) {
+                    labels.push(data[i][0]);
+                    salesData.push(data[i][1]);
+                    revenueData.push(data[i][2]);
+                }
+                
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [
+                            {
+                                label: 'Orders',
+                                data: salesData,
+                                backgroundColor: 'rgba(78, 115, 223, 0.5)',
+                                borderColor: 'rgba(78, 115, 223, 1)',
+                                borderWidth: 1
+                            },
+                            {
+                                label: 'Revenue',
+                                data: revenueData,
+                                type: 'line',
+                                fill: false,
+                                borderColor: 'rgba(28, 200, 138, 1)',
+                                tension: 0.1,
+                                yAxisID: 'y1'
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Orders'
+                                }
+                            },
+                            y1: {
+                                beginAtZero: true,
+                                position: 'right',
+                                title: {
+                                    display: true,
+                                    text: 'Revenue'
+                                },
+                                grid: {
+                                    drawOnChartArea: false
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                            },
+                            tooltip: {
+                                mode: 'index',
+                                intersect: false
+                            }
+                        }
+                    }
+                });
+            }
+        </script>
+    </th:block>
+</body>
+</html>

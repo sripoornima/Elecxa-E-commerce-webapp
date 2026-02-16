@@ -1,0 +1,599 @@
+/* Hero Section */
+.hero {
+    margin-top: 80px;
+    height: 577px;
+    position: relative;
+    overflow: hidden;
+    background-color: #000;
+}
+
+.swiper-container {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.swiper-slide {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+}
+
+.swiper-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform-origin: center;
+    transition: transform 0.8s;
+}
+
+.swiper-slide-active img {
+    transform: scale(1.05);
+}
+
+/* Products Page Styles */
+
+/* Breadcrumb Navigation */
+.breadcrumb-container {
+    margin-top: 40px;
+}
+
+.breadcrumb a {
+    color: black;
+    font-size: 12px;
+    font-family: Poppins;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.breadcrumb span {
+    margin: 0 5px;
+    color: black;
+    font-size: 12px;
+    font-family: Poppins;
+    font-weight: 500;
+}
+
+/* Filter Categories */
+.filter-categories {
+    display: flex;
+    justify-content: flex-start;
+    margin: 20px 0;
+}
+
+/* Updated Category Dropdown Styles */
+.category-dropdown {
+    position: relative;
+    display: inline-block;
+    margin-right: 10px;
+    z-index: 100;
+}
+
+.dropdown-btn {
+    background: #020202;
+    color: white;
+    padding: 8px 20px;
+    border-radius: 1000px;
+    font-size: 12px;
+    font-family: Poppins;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+}
+
+.dropdown-btn:hover {
+    background: #333;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    left: 0;
+    top: 100%;
+    min-width: 200px;
+    background: white;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    border-radius: 8px;
+    z-index: 110;
+    margin-top: 5px;
+    padding: 10px 0;
+    max-height: 300px;
+    overflow-y: auto;
+    transition: all 0.3s ease;
+}
+
+.category-dropdown:hover .dropdown-content,
+.dropdown-content:hover {
+    display: block;
+    animation: fadeIn 0.3s;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.dropdown-content a {
+    color: #333;
+    padding: 10px 15px;
+    text-decoration: none;
+    display: block;
+    font-family: Poppins;
+    font-size: 12px;
+    transition: background-color 0.2s;
+}
+
+.dropdown-content a:hover {
+    background-color: #f5f5f5;
+    color: #6634E1;
+}
+
+.loading-spinner {
+    padding: 15px;
+    text-align: center;
+    color: #666;
+    font-family: Poppins;
+    font-size: 12px;
+}
+
+.category-filter {
+    margin-right: 10px;
+    background: #020202;
+    color: white;
+    padding: 8px 20px;
+    border-radius: 1000px;
+    font-size: 12px;
+    font-family: Poppins;
+}
+
+/* Filter Wrapper */
+.filter-wrapper {
+    position: relative;
+    margin-left: auto;
+}
+
+.filter-button {
+    margin-left: auto;
+    background: linear-gradient(180deg, #6634E1 0%, #4200B8 100%);
+    color: white;
+    padding: 8px 20px;
+    border-radius: 1000px;
+    font-size: 12px;
+    font-family: Poppins;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.filter-button:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+}
+
+/* Filter Modal Styles */
+.filter-modal {
+    display: none;
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    width: 350px;
+    background-color: white;
+    z-index: 10;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+}
+
+.filter-modal.active {
+    display: block;
+    animation: dropDown 0.3s ease;
+}
+
+@keyframes dropDown {
+    from { 
+        opacity: 0; 
+        transform: translateY(-10px); 
+    }
+    to { 
+        opacity: 1; 
+        transform: translateY(0); 
+    }
+}
+
+.filter-modal-content {
+    background: white;
+    width: 100%;
+    max-height: 80vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.filter-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.filter-header h3 {
+    font-family: Poppins;
+    font-weight: 600;
+    font-size: 18px;
+    margin: 0;
+}
+
+.close-filter {
+    cursor: pointer;
+    font-size: 18px;
+    color: #999;
+    transition: color 0.2s;
+}
+
+.close-filter:hover {
+    color: #333;
+}
+
+.filter-section {
+    margin-bottom: 20px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.filter-section h4 {
+    font-family: Poppins;
+    font-weight: 500;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.filter-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.filter-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.filter-option input[type="checkbox"],
+.filter-option input[type="radio"] {
+    accent-color: #6634E1;
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+.filter-option label {
+    font-family: Poppins;
+    font-size: 13px;
+    color: #333;
+    cursor: pointer;
+}
+
+/* Price Range Slider - Modern Design */
+.price-range {
+    margin-top: 15px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.price-slider {
+    position: relative;
+    height: 36px;
+    margin: 10px 0 30px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.price-track-container {
+    position: absolute;
+    width: 100%;
+    height: 10px;
+    background: #f0f0f0;
+    border-radius: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.price-track {
+    position: absolute;
+    height: 10px;
+    background: linear-gradient(to right, #6634E1, #4200B8);
+    border-radius: 10px;
+    box-shadow: 0 1px 3px rgba(102, 52, 225, 0.2);
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.price-handle {
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 36px;
+    height: 36px;
+    background: #ffffff;
+    border-radius: 50%;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    cursor: pointer;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.price-handle::after {
+    content: '';
+    width: 18px;
+    height: 18px;
+    background: linear-gradient(135deg, #6634E1 0%, #4200B8 100%);
+    border-radius: 50%;
+    transition: transform 0.2s;
+}
+
+.price-handle:hover {
+    transform: translate(-50%, -50%) scale(1.1);
+    box-shadow: 0 4px 12px rgba(102, 52, 225, 0.3);
+}
+
+.price-handle:active {
+    transform: translate(-50%, -50%) scale(1.05);
+}
+
+.price-handle:hover::after {
+    transform: scale(1.1);
+}
+
+.price-handle-min {
+    left: 0%;
+}
+
+.price-handle-max {
+    left: 100%;
+}
+
+.price-bubble {
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(135deg, #6634E1 0%, #4200B8 100%);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-family: Poppins;
+    font-weight: 500;
+    opacity: 0;
+    transition: opacity 0.2s, transform 0.2s;
+    pointer-events: none;
+    white-space: nowrap;
+}
+
+.price-handle:hover .price-bubble {
+    opacity: 1;
+    transform: translateX(-50%) translateY(-5px);
+}
+
+.price-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+}
+
+.price-label {
+    font-family: Poppins;
+    font-size: 12px;
+    color: #666;
+    font-weight: 500;
+}
+
+.price-inputs {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 25px;
+    gap: 15px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.price-inputs div {
+    display: flex;
+    flex-direction: column;
+    width: 45%;
+}
+
+.price-inputs label {
+    font-family: Poppins;
+    font-size: 12px;
+    color: #555;
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+
+.price-inputs input {
+    padding: 10px 12px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    font-family: Poppins;
+    font-size: 13px;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    background-color: #f9f9f9;
+    text-align: center;
+}
+
+.price-inputs input:focus {
+    outline: none;
+    border-color: #6634E1;
+    box-shadow: 0 0 0 2px rgba(102, 52, 225, 0.15);
+    background-color: #fff;
+}
+
+/* Filter Actions */
+.filter-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+    gap: 10px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.filter-clear, .filter-apply {
+    padding: 10px 15px;
+    border-radius: 6px;
+    font-family: Poppins;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+}
+
+.filter-clear {
+    background-color: #f5f5f5;
+    color: #333;
+    flex: 1;
+}
+
+.filter-clear:hover {
+    background-color: #eee;
+}
+
+.filter-apply {
+    background: linear-gradient(180deg, #6634E1 0%, #4200B8 100%);
+    color: white;
+    flex: 2;
+}
+
+.filter-apply:hover {
+    opacity: 0.9;
+}
+
+/* Products Grid */
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    margin-top: 50px;
+}
+
+/* Product Card */
+.product-card {
+    background: rgba(217, 217, 217, 0.35);
+    border-radius: 12px;
+    padding: 20px;
+    position: relative;
+}
+
+.wishlist-icon {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: white;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.wishlist-icon:hover {
+    transform: scale(1.1);
+}
+
+.wishlist-icon img {
+    width: 16px;
+    height: 16px;
+}
+
+.product-image {
+	height: 300px;
+    text-align: center;
+    margin-bottom: 20px;
+    padding: 20px;
+}
+
+.product-image img {
+    max-width: 100%;
+    height: auto;
+    object-fit: contain;
+}
+
+.product-card h3 {
+    font-size: 16px;
+    font-family: Poppins;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.product-rating {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    gap: 8px;
+}
+
+.product-rating img {
+    width: 16px;
+    height: 16px;
+}
+
+.product-rating span {
+    font-size: 14px;
+    font-family: Poppins;
+    color: #333;
+}
+
+.product-rating span:first-of-type {
+    font-weight: 600;
+    margin-right: 4px;
+}
+
+.product-rating span:last-of-type {
+    color: #666;
+    font-weight: 400;
+}
+
+.product-price {
+    display: flex;
+    align-items: center;
+}
+
+.product-price span:first-child {
+    font-size: 24px;
+    font-family: Poppins;
+    font-weight: 700;
+    margin-right: 10px;
+}
+
+.product-price span:last-child {
+    font-size: 16px;
+    font-family: Poppins;
+    font-weight: 500;
+    text-decoration: line-through;
+}

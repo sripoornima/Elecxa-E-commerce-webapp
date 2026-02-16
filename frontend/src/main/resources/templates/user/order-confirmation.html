@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmation - ELECXA</title>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/confirmation.css">
+</head>
+<body>
+    <!-- Header Section -->
+    <header class="header">
+        <div class="overlap-group">
+            <a th:href="@{/}"><img class="head-logo" src="../img/Headers/Your_paragraph_text_1-removebg-preview.png" alt="ELECXA" /></a>
+            
+            <div class="header-center">
+                <div class="div">
+                    <div class="menu">
+                        <i class="fas fa-bars"></i>
+                    </div>
+                    <div class="text-wrapper-2">Menu</div>
+                </div>
+                <div class="overlap">
+                    <div class="search-normal">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <div class="text-wrapper">Search by Categories, Products</div>
+                </div>
+            </div>
+
+            <div class="header-right">
+                <div class="icon-user">
+                    <a id="profileLink">
+                        <i class="fas fa-user-circle"></i>
+                        <span>Account</span>
+                    </a>
+                </div>
+                <div class="icon-cart-alt">
+                    <a id="cartLink">
+                        <i class="fas fa-shopping-basket"></i>
+                        <span>Cart</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Section -->
+    <main class="confirmation-container">
+        <!-- Confirmation Message -->
+        <div class="confirmation-message">
+            <i class="fas fa-check-circle"></i>
+            <h1 th:text="${confirmationTitle ?: 'Thank You for Your Order!'}">Thank You for Your Order!</h1>
+            <p th:text="${confirmationMessage ?: 'Your order has been received and is being processed.'}">Your order has been received and is being processed.</p>
+            <p th:text="${emailConfirmation ?: 'An email confirmation has been sent to your registered email address.'}">An email confirmation has been sent to your registered email address.</p>
+        </div>
+
+        <!-- Order Information Section -->
+        <section class="order-details-section">
+            <div class="section-header">
+                <i class="fas fa-receipt"></i>
+                <h2>Order Information</h2>
+            </div>
+            <div class="order-info">
+                <div class="info-row">
+                    <span>Order Number:</span>
+                    <span id="orderNumber" th:text="${order.orderNumber}">--</span>
+                </div>
+                <div class="info-row">
+                    <span>Order Date:</span>
+                    <span id="orderDate" th:text="${#temporals.format(order.orderDate, 'MMM dd, yyyy')}">--</span>
+                </div>
+                <div class="info-row">
+                    <span>Payment Method:</span>
+                    <span id="paymentMethod" th:text="${order.paymentMethod}">--</span>
+                </div>
+                <div class="info-row">
+                    <span>Order Status:</span>
+                    <span id="orderStatus" th:text="${order.status}">--</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Shipping Information Section -->
+        <section class="order-details-section">
+            <div class="section-header">
+                <i class="fas fa-shipping-fast"></i>
+                <h2>Shipping Information</h2>
+            </div>
+            <div class="shipping-info">
+                <div class="info-row">
+                    <span>Name:</span>
+                    <span id="shippingName" th:text="${order.shipping.name}">--</span>
+                </div>
+                <div class="info-row">
+                    <span>Address:</span>
+                    <span id="shippingAddress" th:text="${order.shipping.address}">--</span>
+                </div>
+                <div class="info-row">
+                    <span>City:</span>
+                    <span id="shippingCity" th:text="${order.shipping.city}">--</span>
+                </div>
+                <div class="info-row">
+                    <span>State/Province:</span>
+                    <span id="shippingState" th:text="${order.shipping.state}">--</span>
+                </div>
+                <div class="info-row">
+                    <span>Postal Code:</span>
+                    <span id="shippingPostal" th:text="${order.shipping.postalCode}">--</span>
+                </div>
+                <div class="info-row">
+                    <span>Country:</span>
+                    <span id="shippingCountry" th:text="${order.shipping.country}">--</span>
+                </div>
+                <div class="info-row">
+                    <span>Phone:</span>
+                    <span id="shippingPhone" th:text="${order.shipping.phone}">--</span>
+                </div>
+                
+                <!-- Tracking Information -->
+                <div id="trackingSection" th:if="${order.tracking != null}">
+                    <div class="tracking-info">
+                        <div class="info-row">
+                            <span>Carrier:</span>
+                            <span id="trackingCarrier" th:text="${order.tracking.carrier}">--</span>
+                        </div>
+                        <div class="info-row">
+                            <span>Tracking Number:</span>
+                            <span id="trackingNumber" th:text="${order.tracking.trackingNumber}">--</span>
+                        </div>
+                        <div class="info-row">
+                            <span>Estimated Delivery:</span>
+                            <span id="estimatedDelivery" th:text="${#temporals.format(order.tracking.estimatedDelivery, 'MMM dd, yyyy')}">--</span>
+                        </div>
+                        <a th:href="${order.tracking.trackingUrl}" id="openTrackingButton" class="tracking-link">
+                            <i class="fas fa-external-link-alt"></i> Track Your Package
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Order Summary Section -->
+        <section class="order-details-section">
+            <div class="section-header">
+                <i class="fas fa-box-open"></i>
+                <h2>Order Summary</h2>
+            </div>
+            
+            <!-- Cart Items -->
+            <div class="cart-items" id="cartItemsContainer">
+                <div class="cart-item" th:each="item : ${order.items}">
+                    <div class="item-image">
+                        <img th:src="${item.imageUrl}" th:alt="${item.name}" src="../img/placeholder.jpg" alt="Product">
+                    </div>
+                    <div class="item-details">
+                        <h3 th:text="${item.name}">Product Name</h3>
+                        <p class="item-variant" th:if="${item.variant}" th:text="${item.variant}">Variant</p>
+                        <p class="item-price">
+                            <span th:text="${item.quantity + ' x ₹' + #numbers.formatDecimal(item.price, 0, 'COMMA', 0, 'POINT')}">1 x ₹29,999</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Price Breakdown -->
+            <div class="price-breakdown">
+                <div class="price-row">
+                    <span>Subtotal:</span>
+                    <span id="subtotal" th:text="${'₹' + #numbers.formatDecimal(order.subtotal, 0, 'COMMA', 0, 'POINT')}">--</span>
+                </div>
+                <div class="price-row">
+                    <span>Shipping:</span>
+                    <span id="shipping" th:text="${order.shipping.cost > 0 ? '₹' + #numbers.formatDecimal(order.shipping.cost, 0, 'COMMA', 0, 'POINT') : 'Free'}">--</span>
+                </div>
+                <div class="price-row">
+                    <span>Tax:</span>
+                    <span id="tax" th:text="${'₹' + #numbers.formatDecimal(order.tax, 0, 'COMMA', 0, 'POINT')}">--</span>
+                </div>
+                <div class="price-row">
+                    <span>Total:</span>
+                    <span id="total" th:text="${'₹' + #numbers.formatDecimal(order.total, 0, 'COMMA', 0, 'POINT')}">--</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Action Buttons -->
+        <div class="confirmation-actions">
+            <a th:href="@{/products}" id="continueShopping" class="action-button primary-button">
+                <i class="fas fa-shopping-bag"></i> Continue Shopping
+            </a>
+            <button id="printOrder" class="action-button secondary-button">
+                <i class="fas fa-print"></i> Print Order
+            </button>
+            <button id="viewTracking" th:if="${order.tracking != null}" class="action-button secondary-button">
+                <i class="fas fa-truck"></i> View Tracking
+            </button>
+        </div>
+    </main>
+
+    <!-- Footer Section -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section about">
+                <div class="logo">
+                    <img src="../images/ElecxaLogo.svg" alt="ELECXA Logo">
+                </div>
+                <p>Your one-stop shop for premium electronics and accessories.</p>
+                <div class="social-media">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
+            <div class="footer-section links">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="products.html">Products</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                    <li><a href="terms.html">Terms of Service</a></li>
+                    <li><a href="privacy.html">Privacy Policy</a></li>
+                </ul>
+            </div>
+            <div class="footer-section contact">
+                <h3>Contact Info</h3>
+                <p><i class="fas fa-map-marker-alt"></i> 123 Electronics Way, Circuit City, EC 12345</p>
+                <p><i class="fas fa-phone"></i> +1 (123) 456-7890</p>
+                <p><i class="fas fa-envelope"></i> support@elecxa.com</p>
+                <p><i class="fas fa-clock"></i> Mon-Fri: 9:00 AM - 8:00 PM</p>
+            </div>
+            <div class="footer-section newsletter">
+                <h3>Newsletter</h3>
+                <p>Subscribe to our newsletter for the latest products and exclusive offers.</p>
+                <form th:action="@{/newsletter/subscribe}" method="post">
+                    <input type="email" name="email" placeholder="Enter your email">
+                    <button type="submit">Subscribe</button>
+                </form>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 ELECXA. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="../js/confirmation.js"></script>
+    <script th:inline="javascript">
+        document.addEventListener('DOMContentLoaded', function() {
+            // Order data from server
+            const orderData = /*[[${order}]]*/ null;
+            
+            // Initialize the confirmation page
+            initConfirmationPage(orderData);
+            
+            const userId = sessionStorage.getItem('userId');
+            if (userId) {
+                document.getElementById("profileLink").href = "/profile?id=" + userId;
+                document.getElementById("cartLink").href = "/cart?id=" + userId;
+
+            }
+        });
+    </script>
+</body>
+</html> 

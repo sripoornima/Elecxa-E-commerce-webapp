@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ELECXA - Shopping Cart</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        .cart-container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        
+        .cart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .cart-title {
+            font-size: 28px;
+            font-weight: 600;
+            margin: 0;
+        }
+        
+        .cart-count {
+            color: #666;
+            font-size: 16px;
+        }
+        
+        .cart-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+        }
+        
+        .cart-items {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            padding: 20px;
+        }
+        
+        .cart-item {
+            display: flex;
+            padding: 20px 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+            position: relative;
+        }
+        
+        .cart-item-image {
+            width: 120px;
+            height: 120px;
+            object-fit: contain;
+            margin-right: 20px;
+        }
+        
+        .cart-item-details {
+            flex: 1;
+        }
+        
+        .cart-item-title {
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+        
+        .cart-item-price {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--primary-dark);
+            margin-bottom: 8px;
+        }
+        
+        .cart-item-original-price {
+            font-size: 14px;
+            color: #999;
+            text-decoration: line-through;
+            margin-left: 8px;
+        }
+        
+        .cart-item-actions {
+            display: flex;
+            align-items: center;
+            margin-top: 15px;
+        }
+        
+        .quantity-control {
+            display: flex;
+            align-items: center;
+            margin-right: 20px;
+        }
+        
+        .quantity-btn {
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f5f5f5;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        
+        .quantity-btn:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+        
+        .quantity-input {
+            width: 40px;
+            height: 30px;
+            text-align: center;
+            margin: 0 8px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        .remove-btn {
+            color: #666;
+            font-size: 14px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+        
+        .remove-btn:hover {
+            color: #d9534f;
+        }
+        
+        .remove-btn i {
+            margin-right: 5px;
+        }
+        
+        .cart-summary {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            padding: 20px;
+            position: sticky;
+            top: 20px;
+        }
+        
+        .summary-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+        }
+        
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+        
+        .summary-label {
+            color: #666;
+        }
+        
+        .summary-value {
+            font-weight: 500;
+            color: #333;
+        }
+        
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 18px;
+            font-weight: 600;
+            padding-top: 15px;
+            margin-top: 15px;
+            border-top: 1px solid rgba(0, 0, 0, 0.08);
+        }
+        
+        .checkout-btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 600;
+            text-align: center;
+            border-radius: 8px;
+            margin-top: 20px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .checkout-btn:hover {
+            color: black;
+            border:2px solid black;
+            background-color: var(--primary-dark);
+        }
+        
+        .continue-shopping {
+            display: inline-block;
+            color: var(--primary-color);
+            margin-top: 15px;
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        
+        .continue-shopping:hover {
+            color: var(--primary-dark);
+        }
+        
+        .continue-shopping i {
+            margin-right: 5px;
+        }
+        
+        .empty-cart {
+            text-align: center;
+            padding: 50px 20px;
+        }
+        
+        .empty-cart-icon {
+            font-size: 60px;
+            color: #ddd;
+            margin-bottom: 20px;
+        }
+        
+        .empty-cart-message {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <header class="header">
+        <div class="overlap-group">
+            <a th:href="@{/}"><img class="head-logo" src="../img/Headers/Your_paragraph_text_1-removebg-preview.png" alt="ELECXA" /></a>
+            
+            <div class="header-center">
+                <div class="div">
+                    <div class="menu">
+                        <i class="fas fa-bars"></i>
+                    </div>
+                    <div class="text-wrapper-2">Menu</div>
+                </div>
+                <div class="overlap">
+                    <div class="search-normal">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <div class="text-wrapper">Search by Categories, Products</div>
+                </div>
+            </div>
+
+            <div class="header-right">
+                <div class="icon-user">
+                    <a id="profileLink">
+                        <i class="fas fa-user-circle"></i>
+                        <span>Account</span>
+                    </a>
+                </div>
+                <div class="icon-cart-alt">
+                    <a id="cartLink">
+                        <i class="fas fa-shopping-basket"></i>
+                        <span>Cart</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Cart Content -->
+    <div class="cart-container">
+        <div class="cart-header">
+            <h1 class="cart-title">Your Cart</h1>
+            <p class="cart-count" th:text="${cartItems.size() + ' item(s)'}">3 item(s)</p>
+        </div>
+        
+        <div class="cart-content">
+            <div class="cart-items">
+                <!-- Empty Cart Message -->
+                <div class="empty-cart" th:if="${#lists.isEmpty(cartItems)}">
+                    <div class="empty-cart-message">
+                        <i class="fas fa-shopping-cart"></i>
+                        <h2>Your cart is empty</h2>
+                        <p>Looks like you haven't added any products to your cart yet.</p>
+                        <a th:href="@{/product}" href="products-page.html" class="browse-products-btn">Browse Products</a>
+                    </div>
+                </div>
+                
+                <!-- Cart Items -->
+                <div class="cart-item" th:each="item : ${cartItems}">
+                     <img th:src="${item.product.imageUrl}" th:alt="${item.product.name}" alt="Samsung Galaxy S24 Ultra" class="cart-item-image"> 
+                    
+                    <div class="cart-item-details">
+                    
+                        <h3 th:text="${item.product.name}" class="cart-item-title">SAMSUNG Galaxy S24 Ultra 5G (12GB RAM, 256GB, Titanium Gray)</h3>
+                        <p class="cart-item-price">
+                            ₹<span th:text="${#numbers.formatDecimal(item.product.price - ((item.product.discount/100)* item.product.price), 0, 'COMMA', 0, 'POINT')}">1,10,999</span>
+                            <span th:if="${item.price >= 0}" class="cart-item-original-price">₹<span th:text="${#numbers.formatDecimal(item.price, 0, 'COMMA', 0, 'POINT')}">1,25,999</span></span>
+                        </p>
+                        
+                        <!-- Variant Information --> 
+                        <div class="cart-item-variant" th:if="${item.product.brand != null}">
+                            <span th:text="${item.product.brand}">Titanium Gray, 256GB</span>
+                        </div> 
+                        
+                        <!-- Item Actions -->
+                        <div class="cart-item-actions">
+                            <form th:action="@{/cart/update}" method="post" class="quantity-control">
+                                <input type="hidden" name="itemId" th:value="${item.itemId}">
+                                <button type="submit" name="action" value="decrease" class="quantity-btn">-</button>
+                                <input type="text" name="quantity" th:value="${item.quantity}" value="1" class="quantity-input" readonly>
+                                <button type="submit" name="action" value="increase" class="quantity-btn">+</button>
+                            </form>
+                            
+                            <a th:href="@{/cart/remove(itemId=${item.itemId})}" class="remove-btn">
+                                <i class="fas fa-trash-alt"></i> Remove
+                            </a>
+                        </div>
+                    </div>
+                </div>
+             </div>
+                
+            
+            
+            <!-- Cart Summary  -->
+            <div class="cart-summary" th:if="${not #lists.isEmpty(cartItems)}">
+    <h2 class="summary-title">Order Summary</h2>
+    
+    <div class="summary-row">
+        <span class="summary-label">Subtotal</span>
+        <span class="summary-value">₹<span th:text="${#numbers.formatDecimal(subtotal, 0, 'COMMA', 0, 'POINT')}">0</span></span>
+    </div>
+    
+    <div class="summary-row">
+        <span class="summary-label">Shipping</span>
+        <span class="summary-value">₹<span th:text="${#numbers.formatDecimal(shipping, 0, 'COMMA', 0, 'POINT')}">0</span></span>
+    </div>
+    
+    <div class="summary-row" th:if="${discount >= 0}">
+        <span class="summary-label">Discount</span>
+        <span class="summary-value">-₹<span th:text="${#numbers.formatDecimal(discount, 0, 'COMMA', 0, 'POINT')}">0</span></span>
+    </div>
+    
+    <div class="total-row">
+        <span>Total</span>
+        <span>₹<span th:text="${#numbers.formatDecimal(total, 0, 'COMMA', 0, 'POINT')}">0</span></span>
+    </div>
+    
+   <a th:href="@{/checkout/}" class="checkout-btn">Proceed to Checkout</a>
+    
+</div>
+            
+                <!-- Continue Shopping -->
+                            
+                
+                <a th:href="@{/}" class="continue-shopping">Continue Shopping</a>
+            </div>
+        </div>
+        
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-columns">
+                <div class="footer-column">
+                    <h3>Shop</h3>
+                    <ul>
+                        <li><a href="products-page.html">Products</a></li>
+                        <li><a href="#">Shipping and Returns</a></li>
+                        <li><a href="order-confirmation.html">Track My Order</a></li>
+                        <li><a href="profile-new.html">My Account</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>About</h3>
+                    <ul>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Cookie Policy</a></li>
+                        <li><a href="#">Terms & Conditions</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Do You Need Help?</h3>
+                    <ul>
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">FAQs</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="payment-methods">
+                <h3>Payments Accepted</h3>
+                <div class="payment-icons">
+                    <img src="../img/Footers/image 1.jpg" alt="Visa">
+                    <img src="../img/Footers/image 2.jpg" alt="Mastercard">
+                    <img src="../img/Footers/image 4.jpg" alt="PayPal">
+                    <img src="../img/Footers/image 5.jpg" alt="American Express">
+                    <img src="../img/Footers/image 6.jpg" alt="Apple Pay">
+                    <img src="../img/Footers/image 7.jpg" alt="Google Pay">
+                </div>
+            </div>
+            
+            <div class="footer-divider"></div>
+            
+            <div class="footer-bottom">
+                <div class="footer-logo">
+                    <img src="../img/Headers/Your_paragraph_text_1-removebg-preview.png" alt="ELECXA">
+                </div>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-divider"></div>
+            
+            <div class="copyright">
+                <p>Elecxa © 2025 All Rights Reserved</p>
+            </div>
+        </div>
+    </footer>
+
+<script>
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            const userId = sessionStorage.getItem('userId');
+                if (userId) {
+                    document.getElementById("profileLink").href = "/profile?id=" + userId;
+                    document.getElementById("cartLink").href = "/cart?id=" + userId;
+
+                }                
+            
+        });
+    </script>
+
+    <script src="../js/script.js"></script>
+</body>
+</html> 

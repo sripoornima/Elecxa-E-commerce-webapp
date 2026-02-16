@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ELECXA - Checkout</title>
+<link rel="stylesheet" href="../css/styles.css">
+<link rel="stylesheet" href="../css/checkout.css">
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link
+	href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600&display=swap"
+	rel="stylesheet">
+</head>
+<style>
+.cart-summary {
+	background-color: #fff;
+	border-radius: 10px;
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+	padding: 20px;
+	position: sticky;
+	top: 20px;
+}
+
+.summary-title {
+	font-size: 20px;
+	font-weight: 600;
+	margin-bottom: 20px;
+	padding-bottom: 15px;
+	border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.summary-row {
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: 15px;
+}
+
+.summary-label {
+	color: #666;
+}
+
+.summary-value {
+	font-weight: 500;
+	color: #333;
+}
+
+.total-row {
+	display: flex;
+	justify-content: space-between;
+	font-size: 18px;
+	font-weight: 600;
+	padding-top: 15px;
+	margin-top: 15px;
+	border-top: 1px solid rgba(0, 0, 0, 0.08);
+}
+</style>
+<body>
+	<!-- Header Section -->
+	<header class="header">
+		<div class="overlap-group">
+			<a th:href="@{/}"><img class="head-logo"
+				src="../img/Headers/Your_paragraph_text_1-removebg-preview.png"
+				alt="ELECXA" /></a>
+
+			<div class="header-center">
+				<div class="div">
+					<div class="menu">
+						<i class="fas fa-bars"></i>
+					</div>
+					<div class="text-wrapper-2">Menu</div>
+				</div>
+				<div class="overlap">
+					<div class="search-normal">
+						<i class="fas fa-search"></i>
+					</div>
+					<div class="text-wrapper">Search by Categories, Products</div>
+				</div>
+			</div>
+
+			<div class="header-right">
+				<div class="icon-user">
+					<a id="profileLink"> <i class="fas fa-user-circle"></i> <span>Account</span>
+					</a>
+				</div>
+				<div class="icon-cart-alt">
+					<a id="cartLink"> <i class="fas fa-shopping-basket"></i> <span>Cart</span>
+					</a>
+				</div>
+			</div>
+		</div>
+	</header>
+	<!-- Checkout Content -->
+	<div class="checkout-container">
+		<div class="checkout-progress">
+			<div class="progress-bar"></div>
+			<div class="progress-step active">
+				<span class="progress-step-text">Your Details</span>
+			</div>
+			<div class="progress-step">
+				<span class="progress-step-text">Final Checkout</span>
+			</div>
+			<div class="progress-step">
+				<span class="progress-step-text">Payment</span>
+			</div>
+		</div>
+
+		<!-- Checkout Form -->
+		<div id="checkout-form" th:object="${checkoutForm}">
+			<!-- Checkout Content -->
+			<div class="checkout-content">
+				<!-- Details Panel -->
+				<div class="details-panel">
+					<!-- Personal Details -->
+					<div class="form-section">
+						<h3 class="panel-title">Your Details</h3>
+						<a th:href="@{/login}" href="#" class="login-link">Already
+							Have an Account? Log in</a>
+
+						<div class="form-row">
+							<div class="form-field">
+								<input type="text" class="input-field" placeholder="First Name"
+									id="firstname" name="firstName"
+									th:value="${checkoutForm.firstName}"> <label
+									for="firstname" class="field-label required">First Name</label>
+								<span class="error" th:if="${#fields.hasErrors('firstName')}"
+									th:errors="*{firstName}"></span>
+							</div>
+							<div class="form-field">
+								<input type="text" class="input-field" placeholder="Last Name"
+									id="lastname" name="lastName"
+									th:value="${checkoutForm.lastName}"> <label
+									for="lastname" class="field-label required">Last Name</label> <span
+									class="error" th:if="${#fields.hasErrors('lastName')}"
+									th:errors="*{lastName}"></span>
+							</div>
+						</div>
+
+						<div class="form-row">
+							<div class="form-field">
+								<input type="email" class="input-field" placeholder="Email"
+									id="email" name="email" th:value="${checkoutForm.email}">
+								<label for="email" class="field-label required">Email</label> <span
+									class="error" th:if="${#fields.hasErrors('email')}"
+									th:errors="*{email}"></span>
+							</div>
+							<div class="form-field">
+								<input type="tel" class="input-field" placeholder="PhoneNumber"
+									id="phoneNumber" name="phoneNumber"
+									th:value="${checkoutForm.phoneNumber}"> <label
+									for="phoneNumber" class="field-label required">Phone</label> <span
+									class="error" th:if="${#fields.hasErrors('phoneNumber')}"
+									th:errors="*{phoneNumber}"></span>
+							</div>
+						</div>
+					</div>
+
+					<!-- Shipping Address -->
+					<div class="form-section">
+						<h3 class="panel-title">Shipping Address</h3>
+
+						<div class="form-row">
+							<div class="form-field">
+								<input type="text" id="doorNoStreetName" name="doorNoStreetName"
+									class="input-field" placeholder=" "
+									th:value="${(checkoutForm.doorNoStreetName == null ? '' :checkoutForm.doorNoStreetName)}">
+								<label for="doorNoStreetName" class="required">Address</label> <span
+									class="error-message"
+									th:if="${#fields.hasErrors('doorNoStreetName')}"
+									th:errors="*{doorNoStreetName}"></span>
+							</div>
+						</div>
+
+						<div class="form-row">
+							<div class="form-field">
+								<input type="text" class="input-field"
+									placeholder="Apartment, suite, etc. (optional)" id="apt"
+									name="apartment" th:value="${checkoutForm.doorNoStreetName}">
+								<label for="apt" class="field-label">Apartment, suite,
+									etc.</label>
+							</div>
+						</div>
+
+						<div class="form-row">
+							<div class="form-field">
+								<input type="text" class="input-field" placeholder="Pincode"
+									id="pincode" name="pincode" th:value="${checkoutForm.pincode}">
+								<label for="pincode" class="field-label required">Pincode</label>
+								<span class="error" th:if="${#fields.hasErrors('pincode')}"
+									th:errors="*{pincode}"></span>
+							</div>
+							<div class="form-field">
+								<input type="text" class="input-field" placeholder="City"
+									id="city" name="city" th:value="${checkoutForm.city}">
+								<label for="city" class="field-label required">City</label> <span
+									class="error" th:if="${#fields.hasErrors('city')}"
+									th:errors="*{city}"></span>
+							</div>
+							<div class="form-field">
+								<input type="text" class="input-field" placeholder="State"
+									id="state" name="state" th:value="${checkoutForm.state}">
+								<label for="state" class="field-label required">State</label> <span
+									class="error" th:if="${#fields.hasErrors('state')}"
+									th:errors="*{state}"></span>
+							</div>
+						</div>
+					</div>
+				</div>
+
+
+
+				<!-- Action Buttons -->
+				<div class="button-container1">
+					<div class="cart-summary" th:if="${not #lists.isEmpty(cartItems)}">
+						<h2 class="summary-title">Order Summary</h2>
+
+						<div class="summary-row">
+							<span class="summary-label">Subtotal</span> <span
+								class="summary-value">₹<span
+								th:text="${#numbers.formatDecimal(subtotal, 0, 'COMMA', 0, 'POINT')}">0</span></span>
+						</div>
+
+						<div class="summary-row">
+							<span class="summary-label">Shipping</span> <span
+								class="summary-value">₹<span
+								th:text="${#numbers.formatDecimal(shipping, 0, 'COMMA', 0, 'POINT')}">0</span></span>
+						</div>
+
+						<div class="summary-row" th:if="${discount >= 0}">
+							<span class="summary-label">Discount</span> <span
+								class="summary-value">-₹<span
+								th:text="${#numbers.formatDecimal(discount, 0, 'COMMA', 0, 'POINT')}">0</span></span>
+						</div>
+
+						<div class="total-row">
+							<span>Total</span> <span>₹<span
+								th:text="${#numbers.formatDecimal(total, 0, 'COMMA', 0, 'POINT')}">0</span></span>
+						</div>
+					</div>
+
+					<div class="button-container">
+						<a th:href="@{/}" class="back-button">Back to Shopping</a>
+						<button type="button" class="proceed-button"
+							th:onclick="'initiatePayment(' + ${total} + ')'">Proceed to Final
+							Checkout</button>
+
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Footer -->
+		<footer>
+			<div class="container">
+				<div class="footer-columns">
+					<div class="footer-column">
+						<h3>Shop</h3>
+						<ul>
+							<li><a href="products-page.html">Products</a></li>
+							<li><a href="#">Shipping and Returns</a></li>
+							<li><a href="order-confirmation.html">Track My Order</a></li>
+							<li><a href="profile-new.html">My Account</a></li>
+						</ul>
+					</div>
+					<div class="footer-column">
+						<h3>About</h3>
+						<ul>
+							<li><a href="#">Privacy Policy</a></li>
+							<li><a href="#">Cookie Policy</a></li>
+							<li><a href="#">Terms & Conditions</a></li>
+						</ul>
+					</div>
+					<div class="footer-column">
+						<h3>Do You Need Help?</h3>
+						<ul>
+							<li><a href="#">Contact Us</a></li>
+							<li><a href="#">FAQs</a></li>
+						</ul>
+					</div>
+				</div>
+
+				<div class="payment-methods">
+					<h3>Payments Accepted</h3>
+					<div class="payment-icons">
+						<img src="../img/Footers/image 1.jpg" alt="Visa"> <img
+							src="../img/Footers/image 2.jpg" alt="Mastercard"> <img
+							src="../img/Footers/image 4.jpg" alt="PayPal"> <img
+							src="../img/Footers/image 5.jpg" alt="American Express"> <img
+							src="../img/Footers/image 6.jpg" alt="Apple Pay"> <img
+							src="../img/Footers/image 7.jpg" alt="Google Pay">
+					</div>
+				</div>
+
+				<div class="footer-divider"></div>
+
+				<div class="footer-bottom">
+					<div class="footer-logo">
+						<img
+							src="../img/Headers/Your_paragraph_text_1-removebg-preview.png"
+							alt="ELECXA">
+					</div>
+					<div class="social-icons">
+						<a href="#"><i class="fab fa-facebook-f"></i></a> <a href="#"><i
+							class="fab fa-twitter"></i></a> <a href="#"><i
+							class="fab fa-instagram"></i></a> <a href="#"><i
+							class="fab fa-youtube"></i></a>
+					</div>
+				</div>
+
+				<div class="footer-divider"></div>
+
+				<div class="copyright">
+					<p>Elecxa © 2025 All Rights Reserved</p>
+				</div>
+			</div>
+		</footer>
+		<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+		<script>
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            
+            const userId = sessionStorage.getItem('userId');
+                if (userId) {
+                    document.getElementById("profileLink").href = "/profile?id=" + userId;
+                    document.getElementById("cartLink").href = "/cart?id=" + userId;
+
+                }                
+            
+        });
+        
+        async function initiatePayment(amount) {
+        	const uid = sessionStorage.getItem("userId");
+        	const cid = sessionStorage.getItem("cartId");
+        	 let token = sessionStorage.getItem("accessToken");
+
+            await fetch(`http://localhost:8080/api/payments/initiate?amount=${amount}`, {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                const options = {
+                    key: data.razorpayKey,
+                    amount: data.amount * 100,
+                    currency: data.currency,
+                    name: "Elecxa Store",
+                    description: "Electronics Purchase",
+                    order_id: data.orderId,
+                    handler: async function (response) {
+                        let response1 = await fetch(`http://localhost:8080/api/orders/place?userId=${uid}&cartId=${cid}&totalAmount=${amount}&productId=-1`,{
+                        	method:"POST",
+                        	 headers: {
+                     	        "Content-Type": "application/json",
+                                "Authorization": `Bearer ${token}`
+                     	    }
+                        })
+                        
+                        let orderInfo =await response1.json();
+                        
+                        await fetch(`http://localhost:8080/api/payments/save?razorpayOrderId=${response.razorpay_payment_id}&amount=${amount}&userId=${uid}&orderId=${orderInfo.orderId}`,{
+                        	method:"POST",
+                        	 headers: {
+                        	        "Content-Type": "application/json",
+                                    "Authorization": `Bearer ${token}`
+                        	    }
+                        })
+                    },
+                    prefill: {
+                        name: "Selva Ganapathi",
+                        email: "2k21cse135@kiot.ac.in",
+                        contact: "9080846517"
+                    },
+                    theme: {
+                        color: "#3399cc"
+                    }
+                };
+                const rzp = new Razorpay(options);
+                rzp.open();
+            })
+            .catch(error => console.error('Error initiating payment:', error));
+        }
+        
+        window.initiatePayment = initiatePayment;
+
+    </script>
+
+		<script src="../js/script.js"></script>
+</body>
+</html>

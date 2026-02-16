@@ -1,0 +1,264 @@
+/* Sign In Page Styles */
+:root {
+    --primary-color: #6634E1;
+    --primary-dark: #5429B9;
+    --text-dark: #1a1a1a;
+    --text-light: #555;
+    --gray-light: #f8f8f8;
+    --gray-medium: rgba(217, 217, 217, 0.35);
+    --error-color: #FF0000;
+    --footer-height: 48px;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: white;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    overflow: hidden;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 20px;
+    height: calc(100vh - var(--footer-height));
+    overflow-y: auto;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+}
+
+.container::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+}
+
+/* Logo */
+.logo {
+    width: 150px;
+    margin-top: 70px;
+    margin-bottom: 50px;
+}
+
+/* Welcome Text */
+.welcome-text {
+    font-size: 28px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: #222;
+    text-align: center;
+}
+
+.sign-in-text {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 40px;
+    text-align: center;
+    padding-top:40px;
+}
+
+.sign-in-button {
+	
+    text-align: center;
+    }
+
+/* Form Components */
+.form-container {
+    width: 100%;
+    max-width: 380px;
+}
+
+.form-field {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.input-field {
+    width: 100%;
+    height: 56px;
+    border: 1.5px solid rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    padding: 0 16px;
+    font-size: 15px;
+    color: #333;
+    background: #f8f8f8;
+    transition: all 0.3s ease;
+}
+
+.input-field:focus {
+    border-color: var(--primary-color);
+    background: white;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(102, 52, 225, 0.1);
+}
+
+.field-label {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 15px;
+    color: #777;
+    transition: all 0.3s ease;
+    pointer-events: none;
+    background: transparent;
+    padding: 0 4px;
+}
+
+.input-field:focus + .field-label,
+.input-field:not(:placeholder-shown) + .field-label,
+.form-field.focused .field-label {
+    top: 0;
+    transform: translateY(-50%);
+    font-size: 12px;
+    color: var(--primary-color);
+    background: white;
+    font-weight: 500;
+}
+
+.continue-button {
+    width: 100%;
+    height: 54px;
+    background: linear-gradient(180deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    margin-bottom: 30px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 8px rgba(102, 52, 225, 0.15);
+}
+
+.continue-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(102, 52, 225, 0.25);
+}
+
+.continue-text {
+    color: white;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+/* Divider and Info Text */
+.divider {
+    width: 100%;
+    height: 1px;
+    background: #eee;
+    margin: 20px 0;
+    position: relative;
+}
+
+.info-text {
+    font-size: 13px;
+    color: #777;
+    text-align: center;
+    line-height: 1.5;
+    margin-top: 20px;
+}
+
+/* Error Message */
+.error-message {
+    color: #F44336;
+    font-size: 13px;
+    margin-top: 8px;
+    margin-bottom: 15px;
+}
+
+/* Footer */
+.footer {
+    position: fixed !important;
+    bottom: 0;
+    left: 0;
+    width: 100vw;
+    height: var(--footer-height);
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 0 20px;
+    background-color: #f8f8f8;
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
+    z-index: 100;
+}
+
+.footer-logo {
+    height: 32px !important;
+    margin-right: 15px;
+}
+
+.copyright {
+    font-size: 13px;
+    color: #666;
+}
+
+/* Error state */
+.form-field.error .input-field {
+    border-color: #F44336;
+    box-shadow: 0 0 0 3px rgba(244, 67, 54, 0.1);
+}
+
+.form-field.error .field-label {
+    color: #F44336;
+}
+
+/* Make sure the content doesn't overlap with footer on smaller screens */
+@media (max-height: 700px) {
+    .logo {
+        margin-top: 40px;
+        margin-bottom: 30px;
+    }
+    
+    .welcome-text {
+        margin-bottom: 8px;
+    }
+    
+    .sign-in-text {
+        margin-bottom: 25px;
+    }
+}
+
+/* Ensure consistent footer logo size in all screens */
+#verification-styles .footer-logo,
+#password-styles .footer-logo,
+#signup-styles .footer-logo {
+    height: 32px !important;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    .container {
+        padding: 20px;
+    }
+    
+    .form-container {
+        width: 90%;
+    }
+}
+
+@media (max-width: 480px) {
+    .logo {
+        width: 140px;
+        margin-top: -20px; /* Less push up on mobile */
+    }
+    
+    .welcome-text {
+        font-size: 20px;
+    }
+    
+    .sign-in-text {
+        font-size: 12px;
+    }
+    
+    .continue-button {
+        height: 45px;
+    }
+    
+    .continue-text {
+        font-size: 13px;
+    }
+} 
